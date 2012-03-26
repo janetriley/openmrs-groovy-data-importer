@@ -1,0 +1,66 @@
+	package org.openmrs.tools.importer;
+
+import static org.junit.Assert.*;
+import org.junit.Test;
+import org.junit.Ignore;
+import org.openmrs.api.context.*;
+import org.openmrs.*;
+import org.openmrs.tools.importer.OpenmrsSession;
+import org.openmrs.util.*;
+
+/**
+ * @author me
+ *
+ */
+public class OpenmrsSessionTest {
+
+	/**
+	 * Test method for {@link openmrs.tools.importer.OpenmrsSession#initProps()}.
+	 */
+	@Ignore
+	@Test
+	public void testInitProps() {
+		OpenmrsSession sess = new OpenmrsSession();
+		assertNull( sess.getProps());
+		sess.initProps();
+		assertNotNull(sess.getProps());
+		sess.props.each{ it -> println it;}
+			}
+
+	//@Ignore
+	@Test
+	public void whereAreTheProps(){
+		println OpenmrsUtil.getApplicationDataDirectory();
+	}
+
+	/**
+	 * Test method for {@link openmrs.tools.importer.OpenmrsSession#startOpenmrs()}.
+	 * {@link openmrs.tools.importer.OpenmrsSession#openOpenmrsSession()}
+	 * {@link openmrs.tools.importer.OpenmrsSession#closeOpenmrs()}
+	 */
+	//this makes Maven blow out memory heap
+	@Ignore
+	@Test
+	public void testStartOpenmrs() {
+	//	fail("Not yet implemented");
+	  //  Context.updateDatabase();
+		OpenmrsSession sess = new OpenmrsSession();
+
+//		try {
+		sess.startOpenmrs();
+//		} catch( org.openmrs.module.OpenmrsCoreModuleException e){
+//			System.out.println(" Got a startup error - no biggie " + e);
+//		}
+/*
+		sess.openOpenmrsSession();
+
+		assertTrue("openmrs session opened",Context.isSessionOpen());
+		assertNotNull("start created user context (test before downstream hissy fits)",Context.getUserContext());
+		assertTrue("start logged user in",Context.isAuthenticated());
+*/		sess.closeOpenmrsSession();
+		assertFalse("close worked",Context.isSessionOpen());
+
+	}
+
+
+}
