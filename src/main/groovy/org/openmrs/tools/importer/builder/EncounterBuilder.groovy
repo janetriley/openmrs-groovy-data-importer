@@ -155,7 +155,11 @@ public class ObsFactory extends AbstractFactory {
 		attributes["valueNumeric"] = 1;
 	    else
 		attributes["valueNumeric"] = 0;
-	    o.setValueBoolean(attributes["valueBoolean"]);
+	//if it's set as a boolean, it'll assign a coded value
+		//htmlFormEntry at this time won't print right if there's a coded(boolean) and a numeric
+		//set numeric only - see bug  TRUNK-3150 https://tickets.openmrs.org/browse/TRUNK-3150
+	   attributes.remove("valueBoolean");
+		// o.setValueBoolean(attributes["valueBoolean"]);
 	}
 	return o;
     }

@@ -38,12 +38,14 @@ class LabCrossmatchEncounterSource extends CsvFileSource {
 		parseDate("Date");
 		break;
 	    case [
-		"Bag No",
 		"Volume ml"
 	    ]:
 		return parseInteger(key); //booleans - test
 		break;
-	    case ["CrossPatID",
+	    //all others return text
+	    case [
+		"CrossPatID",
+		"Bag No",
 		"Ward",
 		"Doctor",
 		"Reason",
@@ -53,8 +55,6 @@ class LabCrossmatchEncounterSource extends CsvFileSource {
 		"Comment",
 		"Transfused" //Yes,No,Pending
 	    ]:
-		return readValue(key);
-		break;
 	    default:
 		return readValue(key);
 		return null;

@@ -20,26 +20,23 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.openmrs.tools.importer.source.SourceDb;
 
-import org.openmrs.tools.importer.source.EREncounterSource;
-import org.openmrs.tools.importer.assembler.EREncounterAssembler;
+import org.openmrs.tools.importer.source.LabCrossmatchEncounterSource;
+import org.openmrs.tools.importer.assembler.LabCrossmatchAssembler;
 
 import org.openmrs.*;
 
-class ERImporterTest extends BaseContextSensitiveTest {
+class LabCrossmatchImporterTest extends BaseContextSensitiveTest {
     static Logger thisLog4j = Logger.getLogger("openmrs.tools.importer");
 
     String TEST_IMPLEMENTATION_DATA = "resources/MyImplementationDataSet.xml";
-    String TEST_DATA_FILE = "/Volumes/ETUI/prod_exports/sept_exports/encounters/teeny_er_sample.txt";
-   // String TEST_DATA_FILE = "/Volumes/ETUI/prod_exports/sept_exports/encounters/1k_er_sample.txt";
+    String TEST_DATA_FILE = "/Volumes/ETUI/prod_exports/sept_exports/labs/1k_labcrossmatch_sample.csv";
+    //String TEST_DATA_FILE = "/Volumes/ETUI/prod_exports/sept_exports/labs/teeny_labcrossmatch_sample.csv";
 
-    //String TEST_DATA_FILE = "/Volumes/ETUI/prod_exports/sept_exports/encounters/ER_sample.txt";
-    //String TEST_DATA_FILE = "/Volumes/ETUI/prod_exports/sept_exports/encounters/1K_sample";
-
-    ERImporter imp = null;
+    LabCrossmatchImporter imp = null;
 
     @Before
     public void setUp() throws Exception {
-	imp = new ERImporter(TEST_DATA_FILE);
+	imp = new LabCrossmatchImporter(TEST_DATA_FILE);
     }
 
     @After
@@ -49,7 +46,7 @@ class ERImporterTest extends BaseContextSensitiveTest {
 
     @Test
     public void logConfigured() {
-	//ERImporter imp = new ERImporter();
+	//LabCrossmatchImporter imp = new LabCrossmatchImporter();
 	assertNotNull(imp.log);
 	imp.log.debug("Check one two check check");
     }
@@ -64,9 +61,9 @@ class ERImporterTest extends BaseContextSensitiveTest {
     @Test
     public void confirminitComponents(){
 	imp.initComponents(TEST_DATA_FILE);
-	assertTrue( imp instanceof ERImporter);
-	assertTrue( imp.source instanceof EREncounterSource);
-	assertTrue( imp.assembler instanceof EREncounterAssembler);
+	assertTrue( imp instanceof LabCrossmatchImporter);
+	assertTrue( imp.source instanceof LabCrossmatchEncounterSource);
+	assertTrue( imp.assembler instanceof LabCrossmatchAssembler);
 
 	    }
     @Test
@@ -97,24 +94,7 @@ class ERImporterTest extends BaseContextSensitiveTest {
 	return linecounter;
     }
 
-    @Ignore
-    @Test
-    public void reimport(){
-	executeDataSet(TEST_IMPLEMENTATION_DATA);
-	int numBefore = Context.getPatientService().getAllPatients().size();
-	//def filename="/Volumes/ETUI/access exports/may_dump/utf8_scrubs/wee.txt";
-	//def filename="/Volumes/ETUI/access exports/may_dump/utf8_scrubs/patient_sample.txt";
-	imp.importPatients(filename);
-	int numAfter = Context.getPatientService().getAllPatients().size();
-	assertTrue(numAfter > numBefore);
-	println("Num before and after first import were ${numBefore} and ${numAfter}");
-	numBefore  = numAfter; //the new normal
-	imp = new PatientImporter();
-	imp.importPatients(filename);
-	numAfter = Context.getPatientService().getAllPatients().size();
-	assertEquals(numAfter, numBefore);
-	println("Num after was " + numAfter);
-    }
+
 
 
     /**
@@ -133,7 +113,7 @@ class ERImporterTest extends BaseContextSensitiveTest {
 	def numAfter =Context.getEncounterService().getEncounters(null,
 		new Location(2),null, null, null, null,null, true).size();
 	int numVisitsAfter = Context.getVisitService().getAllVisits().size();
-
+	assertEquals(numVisitsAfter, numVisitsBefore); //labs should not make visits
 	System.out.println("Started with " + numBefore + " ended with " + numAfter);
 	System.out.println("Visits started with " + numVisitsBefore + " ended with " + numVisitsAfter);
 

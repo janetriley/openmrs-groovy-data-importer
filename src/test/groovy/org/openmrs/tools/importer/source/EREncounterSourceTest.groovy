@@ -48,8 +48,8 @@ class EREncounterSourceTest {
 	    "From": -1383732646,
 	    "VisitType": 3,
 	    "DxID1": "A91",
-	    "DxID2": "A91",
-	    "DxID3": "A91",
+	    "DxID2": "G40",
+	    "DxID3": "T30",
 	    "Treatment":-2091716494 ,
 	    "Ketamine":0,
 	    "Observation": 1,
@@ -151,7 +151,7 @@ class EREncounterSourceTest {
 		    1129191084:"Surgery",
 		    1233386422:"Minor Procedure",
 		    1296207625:"Homecare",
-		    "-1383732646" : "Direct",
+		    "-1383732646" : "Direct Admission",
 		]
 	checkField("From", values);
 
@@ -202,7 +202,7 @@ class EREncounterSourceTest {
     public void testDischargeTo(){
 	def values = [
 		    "-1893580051":"ICU",
-		    "-711104359":"Home",
+		    "-711104359":"DISCHARGE TO HOME",
 		    "-505095962":"Death",
 		    "-427741668":"LAU",
 		    1049893479:"LAMA",
@@ -216,7 +216,7 @@ class EREncounterSourceTest {
 
     }
 
-
+/*
     @Test
     public void t(){
 	def values = [
@@ -225,7 +225,7 @@ class EREncounterSourceTest {
 	checkField("", values);
 
     }
-
+*/
 
     public void checkField(fieldName, values){
 	def sample = getSampleValues();

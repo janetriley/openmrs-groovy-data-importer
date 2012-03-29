@@ -28,7 +28,7 @@ abstract class BaseEncounterAssembler {
     static def conceptCache = [:];
 
 
-    abstract org.openmrs.Visit buildVisit();
+    abstract  buildVisit();
 
     static org.openmrs.Concept getConcept( name ){
 	return getConcept(name, false);

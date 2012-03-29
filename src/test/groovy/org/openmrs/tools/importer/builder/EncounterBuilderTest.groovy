@@ -72,6 +72,8 @@ class EncounterBuilderTest   extends BaseContextSensitiveTest {
 	    person:new org.openmrs.Patient(), valueBoolean:false]){};
 	assertEquals(obs.getValueAsBoolean(),Boolean.FALSE);
 	assertEquals((Integer)obs.getValueNumeric(),0);
+	assertNull(obs.valueCoded); //does NOT set a coded true/false
+	assertNull(obs.valueBoolean);
     }
 
     @Test

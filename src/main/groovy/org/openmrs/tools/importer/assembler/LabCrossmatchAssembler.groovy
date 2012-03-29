@@ -21,11 +21,10 @@ class LabCrossmatchAssembler extends BaseEncounterAssembler {
     def frm = builder.form([id:1]){}; //lab crossmatch form
     def encType = new org.openmrs.EncounterType(6);//lab test - crossmatch
 
-
-
-    org.openmrs.Visit buildVisit(){
-	//TO DO: call the visit service to find or create a likely visit
-	return null;
+    def buildVisit(){
+	//doensn't create visits.
+	//EncounterService.saveEncounter() will take care of finding one if appropriate
+	return buildEncounter();
     };
 
 
@@ -43,7 +42,7 @@ class LabCrossmatchAssembler extends BaseEncounterAssembler {
 		    //"Date","CrossPatID","CrossMatchID","Ward","Doctor","Reason","Group","Bag No","Group of Bag","Volume ml","Product","Comment","Transfused"
 		    //REQUESTING DOCTOR - 744
 		    if(! StringUtils.isBlank(source.get("Doctor"))){
-			obs([concept:getConcept(744,true), valueText:"Doctor"]){};
+			obs([concept:getConcept(744,true), valueText:source.get("Doctor")]){};
 		    }
 		    //QUESTION: PATIENT Blood group 772  "Group" //add a lookup
 		    obs([concept:getConcept(772,true),
@@ -54,12 +53,13 @@ class LabCrossmatchAssembler extends BaseEncounterAssembler {
 				valueCoded:getConcept( source.get("Group of Bag"),true)]){};
 
 		    //BAG ID NUMBER: 771
-		    obs([concept:getConcept(771,true),valueText:source.get("Bag No")]){};
-
+		    if(! StringUtils.isBlank(source.get("Bag No"))){
+			obs([concept:getConcept(771,true),valueText:source.get("Bag No")]){};
+		    }
 		    //QUESTION: REquesting Ward  745
 		    if(! StringUtils.isBlank(source.get("Ward"))){
-		      obs([concept:getConcept(745,true),
-			valueCoded:getConcept(source.get("Ward"),true)]){};
+			obs([concept:getConcept(745,true),
+				    valueCoded:getConcept(source.get("Ward"),true)]){};
 		    }
 		    // REQUESTED BLOOD PRODUCT
 		    obs([concept:getConcept(766,true), valueCoded: getConcept(source.get("Product"),true)]){};

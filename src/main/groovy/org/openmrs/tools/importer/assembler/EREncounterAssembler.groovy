@@ -48,7 +48,7 @@ class EREncounterAssembler extends BaseEncounterAssembler {
 			    };
 
 
-		    obs([ concept:getConcept(929, true), //ADMITTED TO ER FROM
+		    obs([ concept:getConcept(46, true), //ADMIT FROM WARD
 				valueCoded: getConcept(source.get("From"))] //
 			    ){
 			    };
@@ -131,8 +131,17 @@ class EREncounterAssembler extends BaseEncounterAssembler {
 	return encounter;
     };
 
-    org.openmrs.Visit buildVisit(){//need a visit type, indicator,
+    def buildVisit(){//need a visit type, indicator,
 	org.openmrs.Encounter enc = buildEncounter();
+
+	//only create visits when there was direct admission
+	def val = enc.allObs.find(){ it -> it.concept?.id == 46};//ADMITTED FROM
+	if(val == null ||
+	    val.getValueCoded()?.getConceptId() != 49 ){//DIRECT ADMISSION
+	    return enc; //don't make a visit
+
+	    }
+
 	org.openmrs.Visit visit = builder.visit(visitType:1){};
 	if( visit.getEncounters() == null )
 	    visit.setEncounters(new HashSet<org.openmrs.Encounter>());
@@ -188,7 +197,7 @@ class EREncounterAssembler extends BaseEncounterAssembler {
     Concept getDischargeDispositionConcept(){
 
 	if( getAdmitToWard() != null)
-	    return getConcept(47,true);//ADMITTED TO WARD
+	    return getConcept(47,true);//DISCHARGE TO WARD
 
 	def dd = source.get("DischargeTo");
 

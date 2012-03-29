@@ -52,101 +52,96 @@ class LabCrossmatchAssemberTest  extends BaseContextSensitiveTest {
 	Patient savedP = Context.getPatientService().savePatient(enc.getPatient());
     }
 
+    @Test
+    public void buildVisitReturnsEncounter(){
+	def v = assembler.buildVisit();
+	assertNotNull(v);
+	assertTrue(v instanceof Encounter);
+    }
 
-    @Ignore
+
     @Test
     public void checkObs() {
 	def enc = assembler.buildEncounter();
 	//def allObs = enc.getObs();
 	def allObs = enc.getAllObs();
-
 	def tblInfo = allObs.find(){ it -> it.concept?.id == 915};
 	assertNotNull(tblInfo);
 	assertEquals( mySource.get("legacyTable"), tblInfo.valueText);
 
+	/**
+	 *
+	 *  org.openmrs.Encounter buildEncounter(){
+	 def pat = buildPatient("CrossPatID");
+	 org.openmrs.Encounter encounter = builder.encounter(
+	 [   encounterDatetime:source.get("Date"),
+	 dateCreated:source.get("Date"),
+	 encounterType:encType ,
+	 location:loc,
+	 form:frm,
+	 // provider:prov,
+	 patient:pat]){
+	 */
 	def val = allObs.find(){ it -> it.concept?.id == 916};
 	assertNotNull(val);
-	assertEquals( mySource.get("legacyEncounterId"), (int)val.getValueNumeric());
+	//	assertEquals( mySource.get("CrossMatchID"), val.getValueNumeric());
 
-
-	val = allObs.find(){ it -> it.concept?.id == 912};
+	val = allObs.find(){ it -> it.concept?.id == 916};
 	assertNotNull(val);
-	assertEquals( mySource.get("GeneralImpression"), val.getValueText());
+	assertEquals( mySource.get("legacyId"),(Integer) val.getValueNumeric());
 
-	val = allObs.find(){ it -> it.concept?.id == 55};
+	//REQUESTING DOCTOR - 744
+	val = allObs.find(){ it -> it.concept?.id == 744};
 	assertNotNull(val);
-	assertEquals( mySource.get("Registered"), val.getValueBoolean());
+	assertEquals( mySource.get("Doctor"), val.getValueText());
 
-	val = allObs.find(){ it -> it.concept?.id == 56};
+	//QUESTION: PATIENT Blood group 772  "Group" //add a lookup
+	val = allObs.find(){ it -> it.concept?.id == 772};
 	assertNotNull(val);
-	assertEquals( mySource.get("Return"), val.getValueBoolean());
+	assertNotNull(val.valueCoded);
 
-	val = allObs.find(){ it -> it.concept?.id == 57};
+	//BAG BLOOD GROUP 773  source.get("Group of Bag")
+
+	val = allObs.find(){ it -> it.concept?.id == 773};
 	assertNotNull(val);
-	assertEquals( mySource.get("Followup"), val.getValueBoolean());
+	assertNotNull(val.valueCoded);
 
 
-	val = allObs.find(){ it -> it.concept?.id == 53};
+	//BAG ID NUMBER: 771
+	val = allObs.find(){ it -> it.concept?.id == 771 };
 	assertNotNull(val);
-	assertEquals( mySource.get("FeePaid"), val.getValueBoolean());
+	assertEquals( mySource.get("Bag No"), val.getValueText());
 
-	val = allObs.find(){ it -> it.concept?.id == 914};
+	//QUESTION: REquesting Ward  745
+	val = allObs.find(){ it -> it.concept?.id == 745};
 	assertNotNull(val);
-	assertEquals( mySource.get("Referal"), val.getValueBoolean());
+	assertNotNull(val.valueCoded);
 
-	val = allObs.find(){ it -> it.concept?.id == 87};
+	// REQUESTED BLOOD PRODUCT
+	//obs([concept:getConcept(766,true), valueCoded: getConcept(source.get("Product"),true)]){};
+
+	val = allObs.find(){ it -> it.concept?.id == 766};
 	assertNotNull(val);
-	assertEquals( assembler.getReferralSource(mySource.get("Referred From")), val.getValueCoded());
+	assertNotNull(val.valueCoded);
 
+	//"Volume ml"  767  REQUESTED BLOOD PRODUCT VOLUME M/L
+	val = allObs.find(){ it -> it.concept?.id == 767 };
+	assertEquals( mySource.get("Volume ml"), (Integer)val.getValueNumeric());
 
-	//primary fx
-	val = allObs.find(){ it -> it.concept?.id == 70};
+	//REASON FOR TRANSFUSION 768  text
+	val = allObs.find(){ it -> it.concept?.id == 768};
 	assertNotNull(val);
-	def dxConcept = Context.getConceptService().getConceptByName( mySource.get("Reg_DiseaseID"));
-	assertNotNull(mySource.get("Reg_DiseaseID"));
-	assertNotNull(dxConcept);
-	assertNotNull(val.getValueCoded());
-	assertEquals(dxConcept, val.getValueCoded());
+	assertEquals( mySource.get("Reason"), val.getValueText());
 
-
-	//primary fx new or old?
-	val = val.getGroupMembers().find(){ it -> it.concept?.id == 72};
+	//COMMENT 48
+	val = allObs.find(){ it -> it.concept?.id == 48 };
 	assertNotNull(val);
-	dxConcept = assembler.getNewOrFollowupConcept("CaseDx1");
-	assertEquals(dxConcept, val.getValueCoded());
+	assertEquals( mySource.get("Comment"), val.getValueText());
 
-	;
-
-
-	//dx2
-	val = allObs.find(){ it -> it.concept?.id == 71};
+	//WAS PRODUCT TRANSFUSED?  Y/N/PENDING
+	val = allObs.find(){ it -> it.concept?.id == 776 };
 	assertNotNull(val);
-	dxConcept = Context.getConceptService().getConceptByName( mySource.get("Reg_DiseaseID2"));
-	assertNotNull(mySource.get("Reg_DiseaseID2"));
-	assertNotNull(dxConcept);
-	assertNotNull(val.getValueCoded());
-	assertEquals(dxConcept, val.getValueCoded());
-
-	//dx3
-	val = allObs.find(){ it -> it.concept?.id == 923};
-	assertNotNull(val);
-	dxConcept = Context.getConceptService().getConceptByName( mySource.get("Reg_DiseaseID3"));
-	assertNotNull(mySource.get("Reg_DiseaseID3"));
-	assertNotNull(dxConcept);
-	assertNotNull(val.getValueCoded());
-	assertEquals(dxConcept, val.getValueCoded());
-
-
-	val = allObs.find(){ it -> it.concept?.id == 917};
-	assertNotNull(val);
-	def ratio = assembler.getWtHtConcept(mySource.get("Wt/Ht"));
-	assertEquals(ratio, val.getValueCoded());
-
-	val = allObs.find(){ it -> it.concept?.id == 30}; //discharge disp
-	assertNotNull(val);
-	assertEquals(assembler.getDischargeDispositionConcept(), val.getValueCoded());
-
-	assertNotNull( allObs.find(){ it -> it.concept?.id == 87} );
+	assertNotNull(val.valueCoded);
     }
 
 

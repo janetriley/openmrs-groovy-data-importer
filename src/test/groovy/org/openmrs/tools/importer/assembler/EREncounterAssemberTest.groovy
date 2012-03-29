@@ -106,12 +106,13 @@ class EREncounterAssemberTest  extends BaseContextSensitiveTest {
 
 	val = allObs.find(){ it -> it.concept?.id == 31};
 	assertNotNull(val);
-	assertEquals( val.getValueBoolean(), source.get("Ketamine"));
+	assertNotNull( val.valueNumeric);
+	assertEquals( val.getValueNumeric() == 1, source.get("Ketamine"));
 
 	val = allObs.find(){ it -> it.concept?.id == 32};
 	assertNotNull(val);
-	assertEquals( val.getValueBoolean(), source.get("Observation"));
-
+	assertNotNull( val.valueNumeric);
+	assertEquals( val.getValueNumeric() == 1, source.get("Observation"));
 
 	val = allObs.find(){ it -> it.concept?.id == 48};
 	assertNotNull(val);
@@ -137,6 +138,11 @@ class EREncounterAssemberTest  extends BaseContextSensitiveTest {
 	val = allObs.find(){ it -> it.concept?.id == 47};//DISCHARGE TO WARD
 	assertNotNull(val);
 	assertNotNull( val.getValueCoded());
+
+	val = allObs.find(){ it -> it.concept?.id == 46};//ADMITTED FROM
+	assertNotNull(val);
+	assertNotNull( val.getValueCoded());
+
 
     }
 

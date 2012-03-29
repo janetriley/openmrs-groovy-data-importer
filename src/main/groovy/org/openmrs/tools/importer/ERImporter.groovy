@@ -18,8 +18,7 @@ class ERImporter extends BaseEncounterImporter  {
 	initComponents(filepath);
     }
 
-    void initComponents(String filepath){
-	importer = new ERImporter();
+   void initComponents(String filepath){
 	source = new EREncounterSource(filepath);
 	assembler = new EREncounterAssembler( source:source);
     }

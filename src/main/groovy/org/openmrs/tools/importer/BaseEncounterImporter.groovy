@@ -26,19 +26,21 @@ abstract class BaseEncounterImporter  {
     .getLog("org.openmrs");
     static org.apache.commons.logging.Log reimport = LogFactory.getLog("reimport");
 
+    ImportSource source = null;
+    BaseEncounterAssembler assembler = null;
 
-    static BaseEncounterImporter importer = null;
-    static ImportSource source = null;
-    static BaseEncounterAssembler assembler = null;
-    abstract void initComponents(String filepath);
+    public BaseEncounterImporter(){
+	;
+    }
 
-/*
     public BaseEncounterImporter(String filepath){
 	this();
 	initComponents(filepath);
-
     }
-  */  /*
+
+        abstract void initComponents(String filepath);
+
+    /*
      * clear the cache periodically to prevent slowdowns
      *
      */
@@ -56,7 +58,7 @@ abstract class BaseEncounterImporter  {
 	initComponents(filepath);
 	def importCounter = 0;
 	def numSaved = 0;
-	println("Starting at: " + new Date() + " at line "  + source.getCurrentLineNum());
+	println("Starting to import ${filepath} at: " + new Date() + " at line "  + source.getCurrentLineNum());
 
 
 	while(source.next() != null ){
@@ -70,156 +72,95 @@ abstract class BaseEncounterImporter  {
 	    }
 
 	    if( source.currentLine == null )
-		continue;
+	    continue;
 
 
-	    Visit  v = assembler.buildVisit();
+	    def  v = assembler.buildVisit();
+
+	    /*
+	     * save the components in this sequence:
+	     * Patient
+	     * Visit
+	     * Encounter
+	     * Each successful save will generate an ID number for the component.
+	     * The ID numbers will be saved in the associated objects.
+	     * (i.e. Encounter needs a legit Patient ID and Visit ID
+	     *
+	     */
 	    Patient newPatient = v.getPatient();
-
 	    Patient savedPatient = null; //on successful save
-	    Patient existingPatient = null; //if patient already exists
 	    try {
+
 		if( newPatient.id > 0 ){
 		    savedPatient = newPatient; //no work to do, this import doesn't change patients
 		} else{
 		    //patient not found - save a stub
 		    savedPatient = Context.getPatientService().savePatient(newPatient);
 		    log.info("Created a new patient at line " + source.currentLineNum +
-			    ", id "  + savedPatient?.getPatientIdentifier());
+		    ", id "  + savedPatient?.getPatientIdentifier());
 		}
-		Visit savedVisit = Context.getVisitService().saveVisit(v);
-		boolean encounterError = false;
-		for( Encounter enc in v.getEncounters()){
-		    def e  = (Context.getEncounterService().saveEncounter(enc));
-		    //assertTrue(enc.id > 0);
-		    if( e == null || enc.id == 0 )
-			encounterError = true;
-		    else
-			numSaved++;
-		}
-
 		if( savedPatient == null ){
 		    logRedo("Failed to save patient " + newPatient?.getPatientIdentifier(), source);
+		continue; //can't save visits and encounters without a patient
 		}
 
-		else if( savedVisit  == null ){
-		    logRedo("Failed to save visit for " + newPatient?.getPatientIdentifier(), source);
+		def savedVisit = null;
+		boolean encounterError = false;
+		if( v instanceof org.openmrs.Visit ){
+		    savedVisit = Context.getVisitService().saveVisit(v);
+
+		    for( Encounter enc in v.getEncounters()){
+			def e  = (Context.getEncounterService().saveEncounter(enc));
+			//assertTrue(enc.id > 0);
+			if( e == null || enc.id == 0 )
+			encounterError = true;
+			else
+			numSaved++;
+		    }
+		} else if ( v instanceof org.openmrs.Encounter){
+
+		    def e  = (Context.getEncounterService().saveEncounter(v));
+		    //assertTrue(enc.id > 0);
+		    if( e == null || v.id == 0 )
+		    encounterError = true;
+		    else{
+		    numSaved++;
+		    savedVisit = Boolean.TRUE;
+		    }
 		}
 
-		else if( encounterError  == null ){
-		    logRedo("Failed to save encounter for " + newPatient?.getPatientIdentifier(), source);
-		}
-		else { //success
-		    //;
-		    //   System.out.println("Success   (line  " + source.getCurrentLineNum() +
-		    //	    "): " + savedVisit.toString() + ": patient " + savedPatient.toString() + "/" +  savedPatient.getPatientIdentifier());
-		}
-	    }catch( Exception e){  //catch all other exceptions from first save attempt
-		log.error( "Got an error trying to save "  + savedPatient?.getPatientIdentifier()  + "/" +   savedPatient +
-			": line " + source.currentLineNum +
-			": " + e.getMessage());
-		logRedo(e.getMessage(), source);
-	    } //end create patient
 
-	}//end while
+	    if( savedVisit  == null ){
+		logRedo("Failed to save visit for " + newPatient?.getPatientIdentifier(), source);
+	    }
 
-	println("Ending at: " + new Date() + " at line "  + source.getCurrentLineNum());
-	println("Final cache size was " + OPDEncounterAssembler.conceptCache.size());
-    }
+	    else if( encounterError  == null ){
+		logRedo("Failed to save encounter for " + newPatient?.getPatientIdentifier(), source);
+	    }
+	    else { //success
+		//;
+		//   System.out.println("Success   (line  " + source.getCurrentLineNum() +
+		//	    "): " + savedVisit.toString() + ": patient " + savedPatient.toString() + "/" +  savedPatient.getPatientIdentifier());
+	    }
+	}catch( Exception e){  //catch all other exceptions from first save attempt
+	    log.error( "Got an error trying to save "  + savedPatient?.getPatientIdentifier()  + "/" +   savedPatient +
+	    ": line " + source.currentLineNum +
+	    ": " + e.getMessage());
+	    logRedo(e.getMessage(), source);
+	} //end create patient
+
+    }//end while
+
+    println("Ending at: " + new Date() + " at line "  + source.getCurrentLineNum());
+    println("Final cache size was " + OPDEncounterAssembler.conceptCache.size());
+}
 
 
 
-
-    public static void main(String[]args) {
-
-	println "Importing Encounters..."
-
-	// set params
-	String importFile = null;
-	String openmrsRuntimeProperties = null;
-	String openmrsUser = null;
-	String openmrsPw = null;
-
-	CommandLineParser parser = new BasicParser();
-	Options options = new Options();
-	options.addOption("u", "user", true, "openMRS username (required)");
-	options.addOption("p", "password", true,
-		"openMRS password (required)");
-	options.addOption("r", "runtime", true,
-		"openMRS runtime properties (required)");
-	options.addOption("f", "file", true, "file to import (required)");
-	options.addOption("d", "delim", true,
-		"field delmiter (optional, defaults to semicolon (;))");
-	options.addOption("i", "inner", true,
-		"delimiter inside a field (optional, defaults to pipe (|) )");
-	options.addOption("h", "help", false, "show this help");
-
-	// Parse the program arguments
-	CommandLine commandLine = parser.parse(options, args);
-
-	if (commandLine.hasOption('u')) {
-	    openmrsUser = commandLine.getOptionValue('u');
-	}
-	if (commandLine.hasOption('p')) {
-	    openmrsPw = commandLine.getOptionValue('p');
-	}
-	if (commandLine.hasOption('r')) {
-	    openmrsRuntimeProperties = commandLine.getOptionValue('r');
-	}
-	if (commandLine.hasOption('f')) {
-	    importFile = commandLine.getOptionValue('f');
-	}
-
-	// exit if required fields missing
-	if (commandLine.hasOption('h') || openmrsUser == null
-	|| openmrsPw == null || openmrsRuntimeProperties == null
-	|| importFile == null) {
-
-	    HelpFormatter formatter = new HelpFormatter();
-	    formatter
-		    .printHelp(
-		    "java importer  -u openmrsUser -p openmrsPw"
-		    + "-r openmrsRuntimePropertiesFile -f importDataFile",
-		    options);
-	    System.exit(1);
-	}
-
-	try {
-
-	    Properties prop = new Properties();
-	    prop.load(new FileInputStream(openmrsRuntimeProperties));
-	    String connectionUser = prop.getProperty("connection.username");
-	    String connectionPw = prop.getProperty("connection.password");
-	    String connectionUrl = prop.getProperty("connection.url");
-
-	    log.info("Importing file " + importFile + " to database "
-		    + connectionUrl + " as db user " + connectionUser
-		    + " and openMRS user " + openmrsUser);
-	    // connection init
-	    Context.startup(connectionUrl, connectionUser, connectionPw, prop);
-	    org.openmrs.api.context.Context.openSession();
-	    org.openmrs.api.context.Context
-		    .authenticate(openmrsUser, openmrsPw);// openmrs user pass
-	    importer.importEncounters(importFile);
-
-	} catch (java.io.FileNotFoundException e) {
-	    log.error("Couldn't find file, can't import anything."
-		    + e.getMessage());
-
-	} catch (RuntimeException e) {
-	    log.error("Runtime exception: " + e.toString() + "\n");
-	    e.printStackTrace();
-	} finally {
-	    Context.closeSession();
-	}
-	log.info("Finished importing.");
-	System.out.println("Finished importing.");
-    }
-
-    def logRedo(msg, source){
-	reimport.error(msg);
-	reimport.error(source.writeAsCsv());
-    }
+def logRedo(msg, source){
+    reimport.error(msg);
+    reimport.error(source.writeAsCsv());
+}
 
 
 }
