@@ -1,8 +1,7 @@
-package org.openmrs.tools.importer.assembler
+package org.angkorhospital.importer.assembler
 
 import groovy.util.FactoryBuilderSupport;
 import org.openmrs.dsl.EncounterFactoryBuilder;
-import org.angkorhospital.importer.source.OPDEncounterSource;
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.tools.importer.assembler.*;
 import org.openmrs.tools.importer.source.*;

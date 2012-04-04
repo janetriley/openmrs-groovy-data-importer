@@ -6,3 +6,8 @@ target/*
 *~
 *.tmp
 *.log
+*errors
+ImportOne.groovy
+Classy.groovy
+DbInspector.groovy
+*log2

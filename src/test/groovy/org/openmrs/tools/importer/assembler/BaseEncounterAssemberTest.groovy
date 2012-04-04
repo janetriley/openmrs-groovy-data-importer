@@ -3,7 +3,7 @@ package org.openmrs.tools.importer.assembler;
 import org.openmrs.Concept;
 import org.openmrs.api.context.Context;
 import org.openmrs.util.OpenmrsConstants;
-
+import org.angkorhospital.importer.source.*;
 
 import org.openmrs.test.BaseContextSensitiveTest;
 import org.openmrs.tools.importer.source.*;
@@ -32,7 +32,7 @@ class BaseEncounterAssemberTest  extends BaseContextSensitiveTest {
 	Context.getAdministrationService().saveGlobalProperty(
 		new GlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_FALSE_CONCEPT,"2"));
 
-	mySource = new AHCOpdEncounterSource(new StringReader(sample));
+	mySource = new OPDEncounterSource(new StringReader(sample));
 	mySource.next();
 	assembler.setSource(mySource);
 	executeDataSet(TEST_IMPLEMENTATION_DATA);

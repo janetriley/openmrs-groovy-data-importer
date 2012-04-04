@@ -13,13 +13,10 @@ import org.openmrs.api.*;
 import org.openmrs.api.context.*;
 import org.apache.commons.cli.*;
 
-import org.openmrs.tools.importer.assembler.OPDEncounterAssembler;
-import org.openmrs.tools.importer.builder.PatientFactoryBuilder;
-import org.openmrs.tools.importer.source.AHCOpdEncounterSource;
-
-import org.openmrs.tools.importer.builder.*;
+import org.openmrs.dsl.PatientFactoryBuilder;
 import org.openmrs.tools.importer.assembler.*;
 import org.openmrs.tools.importer.source.*;
+
 abstract class BaseEncounterImporter  {
 
     static org.apache.commons.logging.Log log = LogFactory
