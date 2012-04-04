@@ -84,17 +84,58 @@ class PatientBuilderTest {
 	assertNotNull(builder);
 	def caretakerName = "Mom of Patient"
 
-	def relationship = builder.relationship( relationshipTypeId:12, patientId:123){
-	    person( gender:"F"){
-		personName(familyName:caretakerName); //the caretaker
-	    };
+	def relationship = builder.relationship( relationshipType:12, personA:123, personB:456){
+	    //   person( gender:"F"){
+	    //		personName(familyName:caretakerName); //the caretaker
+	    //	    };
 	};
 	assertNotNull(relationship);
 	assertNotNull(relationship.personB);
-	assertEquals(relationship.personB.id, 123);
+	assertEquals(relationship.personB.id, 456);
 	assertNotNull(relationship.personA);
-	assertEquals(relationship.personA.getFamilyName(),caretakerName );
+	assertEquals(relationship.personA.id, 123);
 	assertEquals(relationship.relationshipType.id, 12);
+
+	relationship = builder.relationship( relationshipType:12,
+		personB:456 ){
+		    personA: person(gender:"F", id:123)};
+
+	assertNotNull(relationship);
+	assertNotNull(relationship.personB);
+	assertEquals(relationship.personB.id, 456);
+	assertNotNull(relationship.personA);
+	assertEquals(relationship.personA.id, 123);
+	assertEquals(relationship.relationshipType.id, 12);
+
+
+    }
+
+
+    @Test
+    public void testFancyRelationshipFactory(){
+	def builder= new PatientFactoryBuilder();
+	assertNotNull(builder);
+	def familyName = "Bear"
+
+	def relationship = builder.relationship( relationshipType:12){
+
+	    it.personA = person(gender:"F", id:123){
+		personName(familyName:familyName, givenName:"Baby"); //the caretaker
+	    };
+
+	    it.personB = person(gender:"F", id:456){
+		personName(familyName:familyName, givenName:"Mama"); //the caretaker
+	    };
+
+	};
+	assertNotNull(relationship);
+	assertNotNull(relationship.personA);
+	assertEquals(relationship.personA.id, 123);
+	assertNotNull(relationship.personB);
+	assertEquals(relationship.personB.id, 456);
+		assertEquals(relationship.relationshipType.id, 12);
+	assertEquals(relationship.personB.getFamilyName(),familyName);
+
     }
 
     @Test
@@ -154,9 +195,9 @@ class PatientBuilderTest {
 
 	def attr = builder.personAttribute(value:"no id returns null");
 	assertNull(attr);
-	attr = builder.personAttribute(personAttributeTypeId:5);
+	attr = builder.personAttribute(attributeType:5);
 	assertNull(attr);
-	attr = builder.personAttribute(value:"happy path", personAttributeTypeId:5);
+	attr = builder.personAttribute(value:"happy path", attributeType:5);
 	assertNotNull(attr);
 	assertEquals(attr.getValue(),"happy path");
 	assertNotNull(attr.getAttributeType());

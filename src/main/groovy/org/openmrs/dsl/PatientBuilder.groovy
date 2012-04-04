@@ -19,19 +19,6 @@ public class PatientFactoryBuilder extends FactoryBuilderSupport {
 	registerFactory("relationship", new RelationshipFactory())
     }
 }
-/*
- class PatientBuilder extends BuilderSupport {
- protected void setParent(Object parent, Object child){
- };
- protected Object createNode(Object name){
- }; // a node without parameter and closure
- protected Object createNode(Object name, Object value){}; //a node without parameters, but with closure
- protected Object createNode(Object name, Map attributes){}; // a Node without closure but with parameters
- protected Object createNode(Object name, Map attributes, Object value){}; //a node with closure and parameters
- protected Object getName(String methodName){};
- }
- */
-
 
 
 
@@ -122,7 +109,10 @@ public class PersonFactory extends AbstractFactory {
 
 
 
-
+/**
+ * PersonName creates an instance of org.openmrs.PersonName
+ * and associates it with the person.
+ */
 
 public class PersonNameFactory extends AbstractFactory {
     public boolean isLeaf() {
@@ -131,23 +121,24 @@ public class PersonNameFactory extends AbstractFactory {
     public Object newInstance(FactoryBuilderSupport builder,
     Object name, Object value, Map attributes
     ) throws InstantiationException, IllegalAccessException {
-
-	//expects givenName, middleName, familyName, preferred
+	//PersonName expects fields givenName, middleName, familyName, preferred
 	return new PersonName(attributes);
     }
-    /*	public void onNodeCompleted(FactoryBuilderSupport builder,
-     Object parent, Object child) {
-     ;
-     }
-     */
+
 
     public void setParent(FactoryBuilderSupport builder,
     Object parent, Object name) {
+	//add the name to the person
 	if (parent != null && parent instanceof org.openmrs.Person)
 	    parent.addName(name);
     }
 }
 
+
+/**
+ * PersonAddressFactory creates an instance of org.openmrs.PersonAddress
+ * and associates it with a person.
+ */
 
 public class PersonAddressFactory extends AbstractFactory {
     public boolean isLeaf() {
@@ -160,54 +151,70 @@ public class PersonAddressFactory extends AbstractFactory {
 
 	return new PersonAddress(attributes);
     }
-    /*	public void onNodeCompleted(FactoryBuilderSupport builder,
-     Object parent, Object child) {
-     ;
-     }
-     */
+
 
     public void setParent(FactoryBuilderSupport builder,
     Object parent, Object address) {
+	//add the address to the person
 	if (parent != null && (parent instanceof org.openmrs.Person || parent instanceof org.openmrs.Patient))
 	    parent.addAddress(address);
     }
 }
 
+/**
+ * PersonAttributeFactory creates an instance of org.openmrs.PersonAttribute
+ * and associates it with a person.
+ *
+ * @should return null for null attributes
+ * @should return null if attributeType null
+ * @should add attribute to Person if created in a <patient> or <person> block, and Person doesn't already have the attribute
+ *
+ * @see org.openmrs.Person#addAttribute
+ *
+ */
+
 public class PersonAttributeFactory extends AbstractFactory {
-    public boolean isLeaf() {
-	return true;
+
+     public boolean isLeaf() {
+	 //don't process any deeper
+	 return true;
     }
     public Object newInstance(FactoryBuilderSupport builder,
     Object name, Object value, Map attributes
     ) throws InstantiationException, IllegalAccessException {
 
 	if( StringUtils.isEmpty(attributes.value) ||
-	attributes.personAttributeTypeId == null ||
-	attributes.personAttributeTypeId == 0 )
+	attributes.attributeType == null )
 	    return null;//don't return empty attributes
-	return  new PersonAttribute( value:attributes.value,
-	attributeType:new PersonAttributeType(attributes.personAttributeTypeId));
-    }
-    public boolean onHandleNodeAttributes(FactoryBuilderSupport builder,
-    Object node,
-    Map attributes){
-	//it's throwing errors about the personAttributeTypeId not being a prop of PersonAttribute.
-	// We don't need any more attributes processed, so prevent further attribute processing.
-	return false;
+	    if( attributes['attributeType'] instanceof Integer ){
+		attributes['attributeType'] = new PersonAttributeType( id:attributes['attributeType']);
+	    }
+	return  new PersonAttribute( attributes );
     }
 
     public void setParent(FactoryBuilderSupport builder,
-    Object parent, Object attribute) {
-	if (parent != null && attribute != null &&
+    Object parent, Object personAttribute) {
+	if (parent != null && personAttribute != null &&
 	( parent instanceof org.openmrs.Person ||
 	parent instanceof org.openmrs.Patient )
 	){
-	    parent.addAttribute(attribute);
-	    ;
+	    /* adds if the person doesn't already have the attribute */
+	    parent.addAttribute(personAttribute);
 	}
     }
 }
 
+/**
+* RelationshipFactory creates an instance of org.openmrs.Reationship
+* and assigns it to
+*
+* @should return null for null attributes
+* @should return null if attributeType null
+* @should add attribute to Person if created in a <patient> or <person> block, and Person doesn't already have the attribute
+*
+* @see org.openmrs.Person#addAttribute
+*
+*/
 public class RelationshipFactory extends AbstractFactory {
     public boolean isLeaf() {
 	return false;
@@ -215,61 +222,24 @@ public class RelationshipFactory extends AbstractFactory {
     public Object newInstance(FactoryBuilderSupport builder,
     Object name, Object value, Map attributes
     ) throws InstantiationException, IllegalAccessException {
-	//expects: relationshipTypeId, patientId
-	Relationship r = new Relationship();
-	r.setRelationshipType(new RelationshipType(attributes.relationshipTypeId));
-	r.setPersonB(new Person( attributes.patientId));
+    if( attributes['relationshipType'] instanceof Integer ){
+	attributes['relationshipType'] = new RelationshipType( id:attributes['relationshipType']);
+    }
+
+    //Make sure these People already exist
+    //These aren't enough attributes to create a new person on save (need gender, poss. birthdate)
+    if( attributes['personA'] instanceof Integer ){
+	attributes['personA'] = new Person( id:attributes['personA']);
+    }
+    if( attributes['personB'] instanceof Integer ){
+	attributes['personB'] = new Person( id:attributes['personB']);
+    }
+	Relationship r = new Relationship(attributes);
 	return r;
     }
 
-    public boolean onHandleNodeAttributes(FactoryBuilderSupport builder,
-    Object node,
-    Map attributes){
-	//handle attributes here
-	return false;
-    }
-
-    public void onNodeCompleted(FactoryBuilderSupport builder,
-    Object parentPatient, Object relationship) {
-	;
-    }
-
-    public void setParent(FactoryBuilderSupport builder,
-    Object parent, Object relationship) {
-	if( parent != null && parent instanceof org.openmrs.Patient)
-	//all the relationships are expressed in "Caretaker is-relationship-to Patient)
-	//so set patient as PersonB
-	relationship.setPersonB(parent);
-
-    }
 }
 
 
-
-
-/**
- *
- public class XFactory extends AbstractFactory {
- public boolean isLeaf() {
- return false;
- }
- public Object newInstance(FactoryBuilderSupport builder,
- Object name, Object value, Map attributes
- ) throws InstantiationException, IllegalAccessException {
- //expects ...
- //return new X(attributes);
- }
- //		public void onNodeCompleted(FactoryBuilderSupport builder,
- //	 Object parent, Object child) {
- //	 ;
- //	 }
- //
- public void setParent(FactoryBuilderSupport builder,
- Object parent, Object name) {
- //	if (parent != null && parent instanceof org.openmrs.X)
- ;
- }
- }
- */
 
 
