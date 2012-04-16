@@ -46,7 +46,7 @@ class LabCrossmatchEncounterSourceTest {
     static def getSampleValues(){
 	return	[
 	    "Date":"9/8/2011 11:46:49",
-	    "CrossPatID":"2011-018290",
+	    "CrossPatID":"1900-018290",
 	    "CrossMatchID":11065,
 	    "Ward":"ER",
 	    "Doctor":258,

@@ -39,12 +39,13 @@ class EREncounterSourceTest {
     }
 
 
+    //Headers:
     //"Date","PatientID","ERID","From","VisitType","DxID1","DxID2","DxID3","Treatment","Ketamine","Observation","TimeInER","DischargeTo","Comment"
 
     static def getSampleValues(){
 	return	[
 	    "Date": " 6/25/2407 5:25:13",
-	    "PatientID": "2007-012018",
+	    "PatientID": "1900-012018",
 	    "ERID": 53711,
 	    "From": -1383732646,
 	    "VisitType": 3,
