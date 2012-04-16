@@ -1,1 +1,55 @@
-xyzzy
+
+openmrs-groovy-data-importer
+
+SUMMARY:
+This is a set of tools that import encounter and patient data into OpenMRS 1.9 .
+They're offered as an example that you may find helpful for your own project.
+
+
+AUDIENCE:
+Intended for developers who are writing their own tools.  I've attempted to conceal some of the
+lower-level details of org.openmrs.api, but you'll need to be familiar with the API.
+See http://api.openmrs.org for javadocs from the nightly build.
+
+
+CLASS RESPONSIBILITIES:
+
+See docs/architecture_diagram.png for the big-picture overview of classes.
+
+Classes in org.openmrs.* are meant for reuse by other projects.
+
+
+* org.openmrs.tools.importer.Launcher launches the script. It reads command line arguments,
+initializes the OpenMRS context, instantiates the requested class of importer, and kicks off the import.
+It closes the context and does any other cleanup when the import is finished.
+
+* org.openmrs.tools.importer.BaseEncounterImporter is an abstract class that directs the import process.
+initComponents() is a factory that instantiates the assembler and source you're using for this import.
+
+importEncounters() is where all the action happens. It iterates over the data source. It calls the
+assembler to create OpenMRS objects.  It's responsible for saving OpenMRS objects. A record may
+include several OpenMRS objects that need to be saved (to get ID numbers) in a particular order.
+importEncounters() decides what to do if a record import fails, including logging enough information
+for you to identify and retry a failed record.
+
+* org.openmrs.tools.importer.source is responsible for getting field values from the raw data.  This is a good place to
+encapsulate any cleanup or transformation. Examples of cleanup: making values lowercase, trimming whitespace,
+substituting meaningful terms for constants or internal IDs.
+
+An implementation of a csv file source is included.  You could create one to read from a database,
+or from multiple sources.   A data source must be able to indicate that there are more records available
+to consume.
+
+* org.openmrs.tools.importer.assembler puts the pieces together. It's responsible for
+expressing the current line of data from the Source as something the DSL can understand.
+It hands an openMRS object to the Importer
+when asked.
+
+
+* org.openmrs.dsl.* -  a Domain Specific Language written in Groovy, to help build
+     OpenMRS objects in a somewhat more natural way.
+
+Classes in org.angkorhospital.* are customizations for my data set and business logic. They're here as an example.
+I have comma-separated text files.
+
+
