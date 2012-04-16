@@ -1,0 +1,92 @@
+<mockup version="1.0" skin="sketch" measuredW="1240" measuredH="752" mockupW="1170" mockupH="733">
+  <controls>
+    <control controlID="4" controlTypeID="com.balsamiq.mockups::List" x="108" y="135" w="287" h="146" measuredW="100" measuredH="126" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>LAUNCHER%0A*%20reads%20args%0A*%20inits%20OpenMRS%20context%0A*%20instantiates%20requested%20Importer%20class%0A*%20kicks%20off%20import%0A*%20close%20OpenMRS%20context</text>
+      </controlProperties>
+    </control>
+    <control controlID="5" controlTypeID="com.balsamiq.mockups::List" x="60" y="351" w="355" h="179" measuredW="100" measuredH="168" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>IMPORTER%0A*%20instantiates%20assembler%20and%20sources%20%28factory%29%0A*%20while%20there%27s%20data%20to%20be%20imported%3A%0A%20%20+%20tells%20assembler%20to%20make%20an%20OpenMRS%20object%0A%20%20+%20saves%20OpenMRS%20object%28s%29s%20with%20correct%20%0A%20%20%20%20Context.getXYZService%28%29.save%28%29%20in%20correct%20order%0A%20%20+%20log%20errors%20with%20enough%20info%20for%20user%20to%20act%20later%0A*%20Repeat%20until%20no%20more%20to%20import.</text>
+      </controlProperties>
+    </control>
+    <control controlID="6" controlTypeID="com.balsamiq.mockups::List" x="564" y="359" w="366" h="171" measuredW="100" measuredH="147" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>ASSEMBLER%0A*%20holds%20your%20logic%20for%20mapping%20source%20values%09%0A%20%20to%20OpenMRS%20objects%0A*%20asks%20data%20source%20for%20values%0A*%20expresses%20them%20to%20the%20DSL%20%0A*%20returns%20OpenMRS%20object%28s%29%20for%20the%20current%20record%0A*%20responsible%20for%20fetching%20existing%20things%20from%20OpenMRS%20%28e.g.%20when%20updating%20a%20Patient%29</text>
+      </controlProperties>
+    </control>
+    <control controlID="7" controlTypeID="com.balsamiq.mockups::List" x="930" y="577" w="287" h="165" measuredW="100" measuredH="126" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>OpenMRS%20DSL%0A*%20built%20with%20Groovy%27s%20dsl%20classes%0A*%20returns%20OpenMRS%20objects%0A*%20conceals%20some%20OpenMRS%20minutia%20%0A%28e.g.%20adding%20an%20Obs%20to%20an%20Encounter%0Aor%20creating%20an%20EncounterTypeId%20%29%20</text>
+      </controlProperties>
+    </control>
+    <control controlID="8" controlTypeID="com.balsamiq.mockups::List" x="848" y="180" w="287" h="114" measuredW="100" measuredH="126" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>SOURCE%0A*%20reads%20a%20record%20from%20your%20legacy%20data%0A*%20cleans%20it%20up%20if%20needed%0A*%20hands%20back%20the%20value%20for%20a%20field%0A%20</text>
+      </controlProperties>
+    </control>
+    <control controlID="14" controlTypeID="com.balsamiq.mockups::Icon" x="60" y="20" w="-1" h="-1" measuredW="48" measuredH="48" zOrder="5" locked="false" isInGroup="-1">
+      <controlProperties>
+        <icon>EmoticonIcon%7Clarge</icon>
+      </controlProperties>
+    </control>
+    <control controlID="19" controlTypeID="com.balsamiq.mockups::Arrow" x="177" y="273" w="93" h="78" measuredW="150" measuredH="100" zOrder="6" locked="false" isInGroup="-1"/>
+    <control controlID="26" controlTypeID="com.balsamiq.mockups::StickyNote" x="673" y="9" w="550" h="156" measuredW="109" measuredH="123" zOrder="7" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>A%20data%20source%20can%20be%20anything%20-%20a%20file%2C%20a%20database%2C%20whatever.%20%0A%20%0ACustomization%20per%20implementation%20for%3A%20connecting%20to%20the%20source%2C%20getting%20the%20next%20line%2C%20and%20handing%20back%20the%20correct%20value%20when%20given%20a%20field%20name%20%20%28%20e.g.%20get%28%22Marco%22%29%20returns%20%22Polo%22%20%29</text>
+      </controlProperties>
+    </control>
+    <control controlID="27" controlTypeID="com.balsamiq.mockups::StickyNote" x="1015" y="411" w="215" h="157" measuredW="109" measuredH="123" zOrder="8" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>The%20DSL%20doesn%27t%20need%20customization%2C%20unless%20you%20use%20classes%20that%20aren%27t%20included%20yet.%20%20%20It%20may%20be%20useful%20for%20other%20projects.</text>
+      </controlProperties>
+    </control>
+    <control controlID="28" controlTypeID="com.balsamiq.mockups::Label" x="253" y="300" w="352" h="23" measuredW="312" measuredH="23" zOrder="9" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>40463</color>
+        <text>Launcher%20instantiates%20importer%20of%20requested%20class</text>
+      </controlProperties>
+    </control>
+    <control controlID="29" controlTypeID="com.balsamiq.mockups::Tooltip" x="108" y="45" w="474" h="61" measuredW="441" measuredH="255" zOrder="10" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>%5C-u%20user%20%5C-p%20pass%20%5C-r%20/mydir/openmrs-runtime.properties%20%5C-f%20datafile%20%0A%5C-c%20org.ahc.importer.MyImporterClass</text>
+      </controlProperties>
+    </control>
+    <control controlID="30" controlTypeID="com.balsamiq.mockups::StickyNote" x="425" y="518" w="313" h="182" measuredW="109" measuredH="123" zOrder="11" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Assembler%20is%20customized%20per%20kind%20of%20import.%0A%20%0AThis%20is%20the%20place%20to%20put%20extra%20logic%2C%20like%20%0A%22if%20discharge%20status%20is%20died%2C%20call%20patient.deceased%28true%29%22%0A%20</text>
+      </controlProperties>
+    </control>
+    <control controlID="33" controlTypeID="com.balsamiq.mockups::Label" x="692" y="300" w="-1" h="-1" measuredW="231" measuredH="23" zOrder="12" locked="false" isInGroup="-1">
+      <controlProperties>
+        <bold>false</bold>
+        <color>40463</color>
+        <italic>true</italic>
+        <text>Assembler%20asks%20Source%20for%20field%20values</text>
+      </controlProperties>
+    </control>
+    <control controlID="34" controlTypeID="com.balsamiq.mockups::Label" x="707" y="550" w="-1" h="-1" measuredW="301" measuredH="23" zOrder="13" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>40463</color>
+        <text>Assembler%20asks%20DSL%20to%20make%20OpenMRS%20objects%20</text>
+      </controlProperties>
+    </control>
+    <control controlID="36" controlTypeID="com.balsamiq.mockups::Arrow" x="407" y="358" w="175" h="61" measuredW="150" measuredH="100" zOrder="14" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="37" controlTypeID="com.balsamiq.mockups::Icon" x="285" y="502" w="-1" h="-1" measuredW="16" measuredH="16" zOrder="15" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>40463</color>
+        <icon>ReloadIcon%7Cxsmall</icon>
+      </controlProperties>
+    </control>
+    <control controlID="38" controlTypeID="com.balsamiq.mockups::Label" x="425" y="422" w="108" h="96" measuredW="325" measuredH="23" zOrder="16" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>40463</color>
+        <text>%22Give%20me%20an%20OpenMRS%20object%20for%20the%20current%20item%22</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>
