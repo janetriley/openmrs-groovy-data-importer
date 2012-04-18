@@ -1,4 +1,4 @@
-package org.openmrs.tools.importer.assembler;
+package org.openmrs.groovyimporter.assembler;
 
 import org.openmrs.Patient;
 import org.openmrs.Relationship;

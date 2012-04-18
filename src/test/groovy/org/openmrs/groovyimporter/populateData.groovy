@@ -1,4 +1,4 @@
-package org.openmrs.tools.importer;
+package org.openmrs.groovyimporter;
 /*
  import static org.junit.Assert.*;
  import org.junit.After;

@@ -1,4 +1,4 @@
-package org.openmrs.tools.importer;
+package org.openmrs.groovyimporter;
 
 import java.util.Properties;
 

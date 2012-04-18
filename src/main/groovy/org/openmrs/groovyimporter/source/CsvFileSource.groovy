@@ -1,4 +1,4 @@
-package org.openmrs.tools.importer.source;
+package org.openmrs.groovyimporter.source;
 
 import java.io.StringWriter;
 import au.com.bytecode.opencsv.*;

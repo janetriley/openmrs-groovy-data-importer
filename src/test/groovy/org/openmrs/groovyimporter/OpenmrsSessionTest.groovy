@@ -1,11 +1,11 @@
-	package org.openmrs.tools.importer;
+	package org.openmrs.groovyimporter;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.Ignore;
 import org.openmrs.api.context.*;
+import org.openmrs.groovyimporter.OpenmrsSession;
 import org.openmrs.*;
-import org.openmrs.tools.importer.OpenmrsSession;
 import org.openmrs.util.*;
 
 /**

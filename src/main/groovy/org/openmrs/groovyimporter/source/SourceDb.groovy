@@ -1,4 +1,4 @@
-package org.openmrs.tools.importer.source;
+package org.openmrs.groovyimporter.source;
 
 import groovy.sql.Sql;
 import com.mysql.jdbc.Driver;

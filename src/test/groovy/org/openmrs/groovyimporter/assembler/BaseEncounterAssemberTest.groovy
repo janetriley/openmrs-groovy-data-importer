@@ -1,4 +1,4 @@
-package org.openmrs.tools.importer.assembler;
+package org.openmrs.groovyimporter.assembler;
 
 import org.openmrs.Concept;
 import org.openmrs.api.context.Context;
@@ -9,6 +9,8 @@ import org.openmrs.test.BaseContextSensitiveTest;
 import org.openmrs.tools.importer.source.*;
 import static org.junit.Assert.*;
 import org.openmrs.api.context.*;
+import org.openmrs.groovyimporter.assembler.BaseEncounterAssembler;
+import org.openmrs.groovyimporter.assembler.OPDEncounterAssembler;
 import org.openmrs.*;
 
 import org.junit.After;

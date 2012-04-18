@@ -1,4 +1,4 @@
-package org.openmrs.tools.importer.source;
+package org.openmrs.groovyimporter.source;
 
 public interface ImportSource {
 	def next();
