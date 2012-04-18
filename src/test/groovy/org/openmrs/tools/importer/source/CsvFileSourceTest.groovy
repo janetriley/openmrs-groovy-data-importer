@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.openmrs.tools.importer.source.CsvFileSource;
 
 import org.apache.commons.lang.StringUtils;
 import au.com.bytecode.opencsv.*;

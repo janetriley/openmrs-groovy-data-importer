@@ -6,7 +6,6 @@ import au.com.bytecode.opencsv.bean.*;
 import org.apache.log4j.Logger;
 import org.openmrs.*;
 import org.apache.commons.lang.StringUtils;
-
 /**
  *
  * wraps a data file we're reading from
@@ -48,7 +47,7 @@ class CsvFileSource implements ImportSource{
 
     }
 
-    String currentLineToString(){
+    def currentLineToString(){
 	return writeAsCsv(currentLine);
 
     }

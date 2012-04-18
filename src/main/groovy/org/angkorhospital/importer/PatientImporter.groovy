@@ -5,7 +5,7 @@ import java.io.FileReader;
 import java.util.Properties;
 
 import org.angkorhospital.importer.assembler.PatientAssembler;
-import org.angkorhospital.importer.source.PatientSource;
+import org.angkorhospital.importer.source.AHCPatientSource;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
@@ -27,7 +27,7 @@ class PatientImporter  {
 
 
 	def initSource(String filepath){
-		def source = new PatientSource(filepath);
+		def source = new AHCPatientSource(filepath);
 		//source.next();//load up the first real line
 		return source;
 	}
@@ -44,7 +44,7 @@ class PatientImporter  {
 
 	void importPatients(String filepath){
 
-		def source = new org.angkorhospital.importer.source.PatientSource(filepath);
+		def source = new org.angkorhospital.importer.source.AHCPatientSource(filepath);
 		def factory = new PatientAssembler( source:source);
 		def importCounter = 0;
 
