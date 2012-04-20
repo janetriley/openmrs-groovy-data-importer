@@ -2,7 +2,7 @@ package org.angkorhospital.importer;
 
 import org.angkorhospital.importer.assembler.LabCrossmatchAssembler;
 import org.angkorhospital.importer.source.LabCrossmatchEncounterSource;
-import org.openmrs.tools.importer.BaseEncounterImporter;
+import org.openmrs.groovyimporter.BaseEncounterImporter;
 
 
 class LabCrossmatchImporter extends BaseEncounterImporter  {

@@ -2,11 +2,11 @@ package org.angkorhospital.importer.assembler
 
 import groovy.util.FactoryBuilderSupport;
 import org.openmrs.dsl.EncounterFactoryBuilder;
-import org.openmrs.tools.importer.assembler.BaseEncounterAssembler;
+import org.openmrs.groovyimporter.assembler.BaseEncounterAssembler;
 import org.angkorhospital.importer.source.EREncounterSource;
 import org.apache.commons.lang.StringUtils;
 
-import org.openmrs.tools.importer.source.*;
+import org.openmrs.groovyimporter.source.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.Concept;
 import org.openmrs.BaseCustomizableData;

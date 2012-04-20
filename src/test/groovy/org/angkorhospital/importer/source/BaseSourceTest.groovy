@@ -1,6 +1,6 @@
 package org.angkorhospital.importer.source;
 
-import org.openmrs.tools.importer.source.*;
+import org.openmrs.groovyimporter.source.*;
 
 
 import static org.junit.Assert.*;
@@ -15,7 +15,7 @@ abstract class BaseSourceTest {
 
     static sampleValues;
 
-    org.openmrs.tools.importer.source.CsvFileSource mySource = null;
+    org.openmrs.groovyimporter.source.CsvFileSource mySource = null;
     def StringReader reader = null;
 
     @BeforeClass

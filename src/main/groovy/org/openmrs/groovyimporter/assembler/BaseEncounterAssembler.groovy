@@ -5,7 +5,7 @@ import groovy.util.FactoryBuilderSupport;
 import org.openmrs.dsl.EncounterFactoryBuilder;
 import org.apache.commons.lang.StringUtils;
 
-import org.openmrs.tools.importer.source.*;
+import org.openmrs.groovyimporter.source.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.Concept;
 import org.openmrs.BaseCustomizableData;
@@ -22,7 +22,7 @@ abstract class BaseEncounterAssembler {
     static org.openmrs.VisitAttributeType  dischargeAtId = null;
     static org.openmrs.VisitAttributeType  primaryDxId = null;
 
-    org.openmrs.tools.importer.source.ImportSource source;
+    org.openmrs.groovyimporter.source.ImportSource source;
     org.openmrs.dsl.EncounterFactoryBuilder builder = new org.openmrs.dsl.EncounterFactoryBuilder();
     static def conceptCache = [:];
 
@@ -68,7 +68,7 @@ abstract class BaseEncounterAssembler {
 	return c;
     };
 
-    void setSource(org.openmrs.tools.importer.source.ImportSource newSource){
+    void setSource(org.openmrs.groovyimporter.source.ImportSource newSource){
 	source = newSource;
     };
 

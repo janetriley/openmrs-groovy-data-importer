@@ -13,12 +13,13 @@ import org.openmrs.api.*;
 import org.openmrs.api.context.*;
 import org.apache.commons.cli.*;
 
-import org.openmrs.tools.importer.BaseEncounterImporter;
+import org.openmrs.groovyimporter.BaseEncounterImporter;
 import org.openmrs.dsl.PatientFactoryBuilder;
 import org.angkorhospital.importer.source.OPDEncounterSource;
+import org.angkorhospital.importer.assembler.*;
 
-import org.openmrs.tools.importer.assembler.*;
-import org.openmrs.tools.importer.source.*;
+import org.openmrs.groovyimporter.assembler.*;
+import org.openmrs.groovyimporter.source.*;
 class OPDImporter extends BaseEncounterImporter {
 
     void initComponents(String filepath){

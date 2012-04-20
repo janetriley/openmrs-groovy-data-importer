@@ -1,7 +1,7 @@
 package org.angkorhospital.importer.source;
 
 import org.apache.commons.lang.StringUtils;
-import org.openmrs.tools.importer.source.CsvFileSource;
+import org.openmrs.groovyimporter.source.CsvFileSource;
 
 class AHCPatientSource extends CsvFileSource {
 

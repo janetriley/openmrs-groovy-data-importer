@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.Ignore;
 
-import org.openmrs.tools.importer.source.SourceDb;
+import org.openmrs.groovyimporter.source.SourceDb;
 
 import java.sql.*;
 /**

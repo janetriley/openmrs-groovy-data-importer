@@ -14,8 +14,8 @@ import org.openmrs.api.context.*;
 import org.apache.commons.cli.*;
 
 import org.openmrs.dsl.PatientFactoryBuilder;
-import org.openmrs.tools.importer.assembler.*;
-import org.openmrs.tools.importer.source.*;
+import org.openmrs.groovyimporter.assembler.*;
+import org.openmrs.groovyimporter.source.*;
 
 abstract class BaseEncounterImporter  {
 

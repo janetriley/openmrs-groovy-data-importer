@@ -20,7 +20,7 @@ import org.dbunit.database.QueryDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.openmrs.tools.importer.source.SourceDb;
+import org.openmrs.groovyimporter.source.SourceDb;
 
 import org.openmrs.*;
 

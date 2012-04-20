@@ -5,7 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.openmrs.tools.importer.source.LookupDatabase;
+import org.openmrs.groovyimporter.source.LookupDatabase;
 
 import groovy.sql.*;
 

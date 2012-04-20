@@ -1,12 +1,12 @@
 package org.angkorhospital.importer.assembler
 import org.angkorhospital.importer.source.AHCPatientSource;
-import org.openmrs.tools.importer.assembler.BasePatientAssembler;
-import org.openmrs.tools.importer.source.ImportSource;
+import org.openmrs.groovyimporter.assembler.BasePatientAssembler;
+import org.openmrs.groovyimporter.source.ImportSource;
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.dsl.*;
 
 
-class PatientAssembler  implements org.openmrs.tools.importer.assembler.BasePatientAssembler {
+class PatientAssembler  implements org.openmrs.groovyimporter.assembler.BasePatientAssembler {
 
     AHCPatientSource source;
     FactoryBuilderSupport builder = new PatientFactoryBuilder();

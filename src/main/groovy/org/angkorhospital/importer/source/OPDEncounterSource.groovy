@@ -1,6 +1,6 @@
 package org.angkorhospital.importer.source
 import java.io.Reader;
-import org.openmrs.tools.importer.source.CsvFileSource;
+import org.openmrs.groovyimporter.source.CsvFileSource;
 
 class OPDEncounterSource extends CsvFileSource {
 
