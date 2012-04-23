@@ -78,62 +78,31 @@ class PatientBuilderTest {
 	assertEquals(patient.gender,"F");
     }
 
+
     @Test
     public void testRelationshipFactory(){
 	def builder= new PatientFactoryBuilder();
 	assertNotNull(builder);
-	def caretakerName = "Mom of Patient"
-
-	def relationship = builder.relationship( relationshipType:12, personA:123, personB:456){
-	    //   person( gender:"F"){
-	    //		personName(familyName:caretakerName); //the caretaker
-	    //	    };
-	};
-	assertNotNull(relationship);
-	assertNotNull(relationship.personB);
-	assertEquals(relationship.personB.id, 456);
-	assertNotNull(relationship.personA);
-	assertEquals(relationship.personA.id, 123);
-	assertEquals(relationship.relationshipType.id, 12);
-
-	relationship = builder.relationship( relationshipType:12,
-		personB:456 ){
-		    personA: person(gender:"F", id:123)};
-
-	assertNotNull(relationship);
-	assertNotNull(relationship.personB);
-	assertEquals(relationship.personB.id, 456);
-	assertNotNull(relationship.personA);
-	assertEquals(relationship.personA.id, 123);
-	assertEquals(relationship.relationshipType.id, 12);
-
-
-    }
-
-
-    @Test
-    public void testFancyRelationshipFactory(){
-	def builder= new PatientFactoryBuilder();
-	assertNotNull(builder);
 	def familyName = "Bear"
 
-	def relationship = builder.relationship( relationshipType:12){
 
-	    it.personA = person(gender:"F", id:123){
-		personName(familyName:familyName, givenName:"Baby"); //the caretaker
-	    };
 
-	    it.personB = person(gender:"F", id:456){
-		personName(familyName:familyName, givenName:"Mama"); //the caretaker
-	    };
+	def relationship = builder.relationship( relationshipType:12,
+		personA:builder.patient(gender:"F", id:123){
+		    personName(familyName:familyName, givenName:"Baby"); //the caretaker
+		},
+		personB: builder.person(gender:"F", id:456){
+		    personName(familyName:familyName, givenName:"Mama"){}
+		}
+		){};
 
-	};
+
 	assertNotNull(relationship);
 	assertNotNull(relationship.personA);
 	assertEquals(relationship.personA.id, 123);
 	assertNotNull(relationship.personB);
 	assertEquals(relationship.personB.id, 456);
-		assertEquals(relationship.relationshipType.id, 12);
+	assertEquals(relationship.relationshipType.id, 12);
 	assertEquals(relationship.personB.getFamilyName(),familyName);
 
     }
@@ -202,8 +171,6 @@ class PatientBuilderTest {
 	assertEquals(attr.getValue(),"happy path");
 	assertNotNull(attr.getAttributeType());
 	assertEquals(attr.getAttributeType().id, 5);
-
-
     }
 
     @Test
@@ -216,6 +183,16 @@ class PatientBuilderTest {
 	assertEquals(patient.getBirthdate(), today);
 	assertEquals(patient.getPersonDateCreated(), today);
 	assertEquals(patient.gender,"F");
+	assertTrue( patient instanceof org.openmrs.Person);
+    }
+
+    @Test
+    public void testPersonFactoryNoAttributes(){
+	def builder= new PatientFactoryBuilder();
+	def today = new Date();
+	assertNotNull(builder);
+	def patient = builder.person();
+	assertNotNull(patient);
 	assertTrue( patient instanceof org.openmrs.Person);
     }
 

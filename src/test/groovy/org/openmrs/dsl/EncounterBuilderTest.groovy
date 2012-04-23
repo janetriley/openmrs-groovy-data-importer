@@ -43,16 +43,51 @@ class EncounterBuilderTest   extends BaseContextSensitiveTest {
 	assertNotNull(enc.getEncounterType());
 	assertEquals(enc.getEncounterType().id, 7);
 	assertTrue(enc.getEncounterType() instanceof org.openmrs.EncounterType);
-
     }
 
     @Test
     public void location(){
-
 	def loc = builder.location( [id:2]){};
-
 	assertNotNull(loc);
 	assertEquals(loc.getId(), 2);
+    }
+
+    @Test
+    public void childLocation(){
+	def loc = builder.location( [id:2]){
+	    location([id:3])
+	};
+	assertNotNull(loc);
+	assertEquals(loc.getId(), 2);
+	def children = loc.getChildLocations();
+	assertEquals(children.size(), 1);
+	assertEquals(children.iterator().next().id,3);
+    }
+
+    @Test
+    public void locationOnNodeCompleted(){
+	//These should work
+	def item = builder.encounter(){
+	    location([id:2])
+	};
+	assertNotNull(item);
+	assertEquals(item.location.id,2);
+	item = builder.visit(){
+	    location([id:2])
+	};
+	assertNotNull(item);
+	assertEquals(item.location.id,2);
+
+	item = builder.obs(){
+	    location([id:2])
+	};
+	assertNotNull(item);
+	assertEquals(item.location.id,2);
+
+	//This should fail without error
+	item = builder.concept(){
+	    location([id:2])
+	};
     }
 
 
@@ -70,7 +105,7 @@ class EncounterBuilderTest   extends BaseContextSensitiveTest {
 	assertEquals((Integer)obs.getValueNumeric(),1);
 
 	obs = builder.obs( [obsDatetime:now, location:new org.openmrs.Location(2),
-	    person:new org.openmrs.Patient(), valueBoolean:false]){};
+		    person:new org.openmrs.Patient(), valueBoolean:false]){};
 	assertEquals(obs.getValueAsBoolean(),Boolean.FALSE);
 	assertEquals((Integer)obs.getValueNumeric(),0);
 	assertNull(obs.valueCoded); //does NOT set a coded true/false
@@ -107,11 +142,11 @@ class EncounterBuilderTest   extends BaseContextSensitiveTest {
     @Test
     public void visit(){
 	org.openmrs.Visit v = builder.visit(visitId:3,  visitType:1,
-	    startDatetime:new Date(), stopDatetime:new Date()){
-	        patient(id:5){};
-	        encounter(encounterId:4){};
-	    	location(id:1);
-	};
+		startDatetime:new Date(), stopDatetime:new Date()){
+		    patient(id:5){};
+		    encounter(encounterId:4){};
+		    location(id:1);
+		};
 
 
 	assertNotNull(v);
@@ -129,24 +164,5 @@ class EncounterBuilderTest   extends BaseContextSensitiveTest {
 	def savedVisit = Context.getVisitService().saveVisit(v);
 	assertNotNull(savedVisit);
 	assertTrue(savedVisit.id > 0);
-    }
-
-
-
-    //check if this case is still valid
-    @Ignore
-    @Test
-    public void diagnosis(){
-	assertNotNull(Context.getConceptService());
-	def obs = builder.diagnosis( "isPrimary":true, code:"C96", caseForDx:"spots", ){};
-	assertNotNull(obs);
-	assertTrue(obs instanceof org.openmrs.Obs);
-	assertNotNull(obs.getConcept());
-
-	assertEquals(obs.getGroupMembers()?.size(),1);
-	obs.getGroupMembers().each(){
-	    assertEquals(it.getObsGroup(),obs);
-	    assertEquals(it.getConcept().conceptId,99);
-	}
     }
 }
