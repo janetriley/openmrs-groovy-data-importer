@@ -1,7 +1,7 @@
 package org.angkorhospital.dsl;
 
 import org.openmrs.api.context.Context;
-import org.openmrs.dsl.EncounterFactoryBuilder;
+import org.openmrs.dsl.OpenMRSFactoryBuilder;
 import org.openmrs.test.BaseContextSensitiveTest;
 import static org.junit.Assert.*;
 import org.junit.*;

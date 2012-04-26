@@ -2,7 +2,7 @@ package org.openmrs.groovyimporter.assembler
 
 
 import groovy.util.FactoryBuilderSupport;
-import org.openmrs.dsl.EncounterFactoryBuilder;
+import org.openmrs.dsl.OpenMRSFactoryBuilder;
 import org.apache.commons.lang.StringUtils;
 
 import org.openmrs.groovyimporter.source.*;
@@ -23,7 +23,7 @@ abstract class BaseEncounterAssembler {
     static org.openmrs.VisitAttributeType  primaryDxId = null;
 
     org.openmrs.groovyimporter.source.ImportSource source;
-    org.openmrs.dsl.EncounterFactoryBuilder builder = new org.openmrs.dsl.EncounterFactoryBuilder();
+    org.openmrs.dsl.OpenMRSFactoryBuilder builder = new org.openmrs.dsl.OpenMRSFactoryBuilder();
     static def conceptCache = [:];
 
 

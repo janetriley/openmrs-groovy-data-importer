@@ -14,7 +14,7 @@ import org.openmrs.dsl.*;
 /**
  * EncounterFactoryBuilder registers all the available factories.
  */
-public class AHCEncounterFactoryBuilder extends org.openmrs.dsl.EncounterFactoryBuilder  {
+public class AHCEncounterFactoryBuilder extends org.openmrs.dsl.OpenMRSFactoryBuilder  {
 
     public AHCEncounterFactoryBuilder(boolean init = true) {
 	super(init);

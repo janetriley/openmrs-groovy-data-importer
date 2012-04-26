@@ -4,7 +4,7 @@ package org.angkorhospital.importer;
 
 import org.angkorhospital.importer.assembler.EREncounterAssembler;
 import org.angkorhospital.importer.source.EREncounterSource;
-import org.openmrs.dsl.PatientFactoryBuilder;
+import org.openmrs.dsl.OpenMRSFactoryBuilder;
 import org.openmrs.groovyimporter.BaseEncounterImporter;
 
 

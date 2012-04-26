@@ -1,7 +1,7 @@
 package org.angkorhospital.importer.assembler
 
 import groovy.util.FactoryBuilderSupport;
-import org.openmrs.dsl.EncounterFactoryBuilder;
+import org.openmrs.dsl.OpenMRSFactoryBuilder;
 import org.openmrs.groovyimporter.assembler.BaseEncounterAssembler;
 import org.angkorhospital.importer.source.EREncounterSource;
 import org.apache.commons.lang.StringUtils;

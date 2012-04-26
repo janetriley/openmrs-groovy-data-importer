@@ -13,7 +13,7 @@ import org.openmrs.api.*;
 import org.openmrs.api.context.*;
 import org.apache.commons.cli.*;
 
-import org.openmrs.dsl.PatientFactoryBuilder;
+import org.openmrs.dsl.OpenMRSFactoryBuilder;
 import org.openmrs.groovyimporter.assembler.*;
 import org.openmrs.groovyimporter.source.*;
 

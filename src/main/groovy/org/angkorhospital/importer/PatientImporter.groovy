@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import org.openmrs.*;
 import org.openmrs.api.*;
 import org.openmrs.api.context.*;
-import org.openmrs.dsl.PatientFactoryBuilder;
+import org.openmrs.dsl.OpenMRSFactoryBuilder;
 import org.apache.commons.cli.*;
 
 import org.openmrs.tools.importer.factory.*;

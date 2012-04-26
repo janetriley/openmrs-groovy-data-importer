@@ -9,7 +9,7 @@ import org.openmrs.dsl.*;
 class PatientAssembler  implements org.openmrs.groovyimporter.assembler.BasePatientAssembler {
 
     AHCPatientSource source;
-    FactoryBuilderSupport builder = new PatientFactoryBuilder();
+    FactoryBuilderSupport builder = new OpenMRSFactoryBuilder();
 
     public AHCMainPatientAssembler(){
     }

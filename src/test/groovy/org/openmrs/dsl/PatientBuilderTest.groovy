@@ -7,7 +7,7 @@ import org.junit.*;
 import org.openmrs.*;
 //import org.openmrs.tools.importer.builder.PatientBuilder;
 import org.openmrs.dsl.PatientFactory;
-import org.openmrs.dsl.PatientFactoryBuilder;
+import org.openmrs.dsl.OpenMRSFactoryBuilder;
 class PatientBuilderTest {
 
     @BeforeClass
@@ -37,7 +37,7 @@ class PatientBuilderTest {
 
     @Test
     public void testPatientBuilderFactory(){
-	def builder= new PatientFactoryBuilder();
+	def builder= new OpenMRSFactoryBuilder();
 	def today = new Date();
 	assertNotNull(builder);
 	def patient = builder.patient( gender:"F", birthdate:today, personDateCreated:today){
@@ -68,7 +68,7 @@ class PatientBuilderTest {
 
     @Test
     public void testPatientFactory(){
-	def builder= new PatientFactoryBuilder();
+	def builder= new OpenMRSFactoryBuilder();
 	def today = new Date();
 	assertNotNull(builder);
 	def patient = builder.patient( gender:"F", birthdate:today, personDateCreated:today);
@@ -81,7 +81,7 @@ class PatientBuilderTest {
 
     @Test
     public void testRelationshipFactory(){
-	def builder= new PatientFactoryBuilder();
+	def builder= new OpenMRSFactoryBuilder();
 	assertNotNull(builder);
 	def familyName = "Bear"
 
@@ -109,7 +109,7 @@ class PatientBuilderTest {
 
     @Test
     public void testPersonAddressFactory(){
-	def builder= new PatientFactoryBuilder();
+	def builder= new OpenMRSFactoryBuilder();
 	def today = new Date();
 	assertNotNull(builder);
 	def address = builder.personAddress( 	preferred:true,
@@ -133,7 +133,7 @@ class PatientBuilderTest {
 
     @Test
     public void testPersonNameFactory(){
-	def builder= new PatientFactoryBuilder();
+	def builder= new OpenMRSFactoryBuilder();
 	assertNotNull(builder);
 	def name = builder.personName( givenName:"given", familyName:"family",
 		preferred:true);
@@ -146,7 +146,7 @@ class PatientBuilderTest {
 
     @Test
     public void testPatientIdentifierFactory(){
-	def builder= new PatientFactoryBuilder();
+	def builder= new OpenMRSFactoryBuilder();
 	assertNotNull(builder);
 	def id = builder.patientIdentifier(location:2, identifierType:3,
 		preferred:true);
@@ -159,7 +159,7 @@ class PatientBuilderTest {
 
     @Test
     public void testPersonAttributeFactory(){
-	def builder= new PatientFactoryBuilder();
+	def builder= new OpenMRSFactoryBuilder();
 	assertNotNull(builder);
 
 	def attr = builder.personAttribute(value:"no id returns null");
@@ -175,7 +175,7 @@ class PatientBuilderTest {
 
     @Test
     public void testPersonFactory(){
-	def builder= new PatientFactoryBuilder();
+	def builder= new OpenMRSFactoryBuilder();
 	def today = new Date();
 	assertNotNull(builder);
 	def patient = builder.person( gender:"F", birthdate:today, personDateCreated:today);
@@ -188,7 +188,7 @@ class PatientBuilderTest {
 
     @Test
     public void testPersonFactoryNoAttributes(){
-	def builder= new PatientFactoryBuilder();
+	def builder= new OpenMRSFactoryBuilder();
 	def today = new Date();
 	assertNotNull(builder);
 	def patient = builder.person();
@@ -200,7 +200,7 @@ class PatientBuilderTest {
     @Test
     public void testMeShouldReturnObj(){
 	Patient pat = new Patient(123);
-	def builder= new PatientFactoryBuilder();
+	def builder= new OpenMRSFactoryBuilder();
 	def patient = builder.patient(["me":pat]);
 	assertEquals(pat, patient);
 

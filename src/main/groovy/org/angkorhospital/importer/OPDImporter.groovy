@@ -14,7 +14,7 @@ import org.openmrs.api.context.*;
 import org.apache.commons.cli.*;
 
 import org.openmrs.groovyimporter.BaseEncounterImporter;
-import org.openmrs.dsl.PatientFactoryBuilder;
+import org.openmrs.dsl.OpenMRSFactoryBuilder;
 import org.angkorhospital.importer.source.OPDEncounterSource;
 import org.angkorhospital.importer.assembler.*;
 

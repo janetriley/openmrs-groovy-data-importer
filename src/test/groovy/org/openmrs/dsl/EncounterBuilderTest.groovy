@@ -1,7 +1,7 @@
 package org.openmrs.dsl;
 
 import org.openmrs.api.context.Context;
-import org.openmrs.dsl.EncounterFactoryBuilder;
+import org.openmrs.dsl.OpenMRSFactoryBuilder;
 import org.openmrs.test.BaseContextSensitiveTest;
 import static org.junit.Assert.*;
 import org.junit.*;
@@ -9,7 +9,7 @@ import org.junit.*;
 
 class EncounterBuilderTest   extends BaseContextSensitiveTest {
 
-    EncounterFactoryBuilder builder = new EncounterFactoryBuilder();
+    OpenMRSFactoryBuilder builder = new OpenMRSFactoryBuilder();
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
