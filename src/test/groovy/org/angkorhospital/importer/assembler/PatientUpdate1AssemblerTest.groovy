@@ -27,12 +27,13 @@ import org.junit.Test;
 
 import org.openmrs.*;
 
-class AHCPatientAssemblerTest  extends BaseContextSensitiveTest {
+class PatientUpdate1AssemblerTest  extends BaseContextSensitiveTest {
     static Logger thisLog4j = Logger.getLogger("openmrs.tools.importer");
 
     String TEST_IMPLEMENTATION_DATA = "resources/MyImplementationDataSet.xml";
     // String TEST_DATA_FILE = "/Volumes/ETUI/prod_exports/sept_exports/patient_sample.txt"
     PatientAssembler factory = null;
+    PatientAssembler updateFactory = null;
 
     @Before
     public void setUp() throws Exception {
@@ -43,8 +44,28 @@ class AHCPatientAssemblerTest  extends BaseContextSensitiveTest {
 		);
 
 	source.next();
-	factory = new PatientAssembler();
+	//test that an updated patient will be created if missing
+	factory = new PatientUpdate1Assembler();
 	factory.setSource(source);
+
+	//use this for updates and comparisons
+	def values = AHCPatientSourceTest.ahcSampleValues;
+
+	values["FamilyName_e"]="new";
+	values["FirstName_e"]="new";
+	values["RelationShipType"]="new";
+	values["CaretakerName_k"]="new";
+	values["Address"]="new";
+	values["Pv_Province_e"]="new";
+	values["Di_District_e"]="new";
+	values["Cn_Commune_e"]="new";
+	values["Vi_Village_e"]="new";
+
+	def source2 = new AHCPatientSource(
+		new StringReader(BaseSourceTest.getSampleValuesString(values)));
+	source2.next();
+	updateFactory = new PatientUpdate1Assembler();
+	updateFactory.setSource(source2);
     }
 
     @After
@@ -54,6 +75,8 @@ class AHCPatientAssemblerTest  extends BaseContextSensitiveTest {
 
     @Test
     public void createPatient(){
+
+	//confirm it'll call super() buildPatient and make a real patient
 	def patient = factory.buildPatient();
 	assertNotNull(patient);
 	assertEquals(patient.birthdate,  factory.source.get("DateOfBirth"));
@@ -74,25 +97,7 @@ class AHCPatientAssemblerTest  extends BaseContextSensitiveTest {
 	}
     }
 
-    @Test
-    public void checkIdentifiers(){
-	def patient = factory.buildPatient();
-	def ids = patient.getIdentifiers();
-	assertEquals(ids.size(), 2);
-	def notNulls = ids.findAll(){ it-> it == null; };
-	assertEquals(notNulls.size(), 0);
-	ids.each(){ it ->
-	    if( it.preferred == Boolean.TRUE){//original legacy identifier
-		assertEquals(2, it.location.id);
-		assertEquals(2, it.identifierType.id);
-		assertEquals(it.identifier, factory.source.get("patientId"));
-	    } else {
-		assertEquals(2, it.location.id);//new style
-		assertEquals(3, it.identifierType.id);
-		assertEquals(it.identifier, factory.source.getSecondaryIdentifier());
-	    }
-	}
-    }
+
 
     @Test
     public void checkNames(){
@@ -129,16 +134,72 @@ class AHCPatientAssemblerTest  extends BaseContextSensitiveTest {
 
     }
 
-
-
     @Test
-    public void patientIsSaveable(){
-
+    public void checkUpdate(){
+	//create a patient
 	def patient = factory.buildPatient();
 	assertNotNull(Context.getPatientService().savePatient(patient));
 	assertNotNull(patient.getId());
 	assertTrue(patient.getId() > 0);
+
+	def updatedPatient = updateFactory.buildPatient();
+
+	assertEquals(patient.id, updatedPatient.id);
+	assertEquals("no new addrs added",updatedPatient.getAddresses().size(),1);
+	updatedPatient.getAddresses().each{ address->
+	    [
+		address.address1,
+		address.cityVillage,
+		address.neighborhoodCell,
+		address.countyDistrict,
+		address.stateProvince
+	    ].each(){ value->
+		assertEquals(value, "new");
+	    }
+	}
+	assertEquals(patient.getAddresses().first().id, updatedPatient.getAddresses().first().id);
+
+	def names = updatedPatient.getNames();
+	assertEquals(names.size(), 2);
+	names.each(){ name->
+	    assertNotNull(name.givenName);
+	    assertNotNull(name.familyName);
+	    if( name.preferred == Boolean.TRUE){
+		assertEquals(name.givenName,factory.source.get("FirstName_k"));
+		assertEquals(name.familyName,factory.source.get("FamilyName_k"));
+	    } else {
+		assertEquals(name.givenName,"new");
+		assertEquals(name.familyName,"new");
+	    }
+	};
+
+
+	//caretaker info is being handled as an attribute rather than a Person and Relationship
+	[
+	    "CaretakerName_k",
+	    "RelationShipType"
+	].each(){ name ->
+
+	    def attr = updatedPatient.getAttribute(factory.personAttributeTypeIds[name]);
+	    assertNotNull( "Checking attr " + name, attr);
+	    def value = factory.source.get(name);
+	    assertEquals(attr.value, value);
+	}
+
+
+	//These were left alone:
+	assertEquals(updatedPatient.birthdate,  factory.source.get("DateOfBirth"));
+	assertEquals(updatedPatient.dateCreated,factory.source.get("CreationDate"));
+	assertEquals(updatedPatient.personDateCreated,factory.source.get("CreationDate"));
+	assertEquals(updatedPatient.gender, factory.source.get("Gender"));
+
+
+
+	assertNotNull(Context.getPatientService().savePatient(updatedPatient));
+
+
     }
+
 
 }
 

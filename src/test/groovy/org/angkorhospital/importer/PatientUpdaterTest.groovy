@@ -2,7 +2,7 @@ package org.angkorhospital.importer;
 
 import static org.junit.Assert.*;
 
-import org.angkorhospital.importer.PatientUpdater;
+import org.angkorhospital.importer.PatientUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -38,7 +38,7 @@ class PatientUpdaterTest {
 		PersonName name2 = new PersonName("given", "middle", "family");
 		pat2.addName(name2);
 
-		def diffs = PatientUpdater.aNotInB(pat1.getNames(), pat2.getNames(), PatientUpdater.compareNames);
+		def diffs = PatientUtils.aNotInB(pat1.getNames(), pat2.getNames(), PatientUtils.compareNames);
 		assertNotNull(diffs);
 		assertEquals(diffs.size(),0);
 	}
@@ -55,9 +55,9 @@ class PatientUpdaterTest {
 		PersonName name3 = new PersonName("different", "middle", "family");
 		PersonName name4  = new PersonName(); //test for nulls
 
-		assertTrue(PatientUpdater.compareNames.call(name1, name2));
-		assertFalse(PatientUpdater.compareNames.call(name1, name3));
-		assertFalse(PatientUpdater.compareNames.call(name1, name4));
+		assertTrue(PatientUtils.compareNames.call(name1, name2));
+		assertFalse(PatientUtils.compareNames.call(name1, name3));
+		assertFalse(PatientUtils.compareNames.call(name1, name4));
 
 	}
 
@@ -77,11 +77,11 @@ class PatientUpdaterTest {
 		Patient pat2 = new Patient();
 		PersonName name2 = new PersonName("different", "middle", "family");
 		pat2.addName(name2);
-		def diffs = PatientUpdater.aNotInB(pat1.getNames(), pat2.getNames(), PatientUpdater.compareNames);
+		def diffs = PatientUtils.aNotInB(pat1.getNames(), pat2.getNames(), PatientUtils.compareNames);
 		assertTrue(diffs.contains(name1));
 		assertFalse(diffs.contains(name2));
 
-		diffs = PatientUpdater.aNotInB(pat2.getNames(), pat1.getNames(),  PatientUpdater.compareNames);
+		diffs = PatientUtils.aNotInB(pat2.getNames(), pat1.getNames(),  PatientUtils.compareNames);
 		assertTrue(diffs.contains(name2));
 		assertFalse(diffs.contains(name1));
 	}
@@ -103,7 +103,7 @@ class PatientUpdaterTest {
 		pat2.addName(name2);
 		pat2.addName(name3)
 
-		def changed = PatientUpdater.updateNames(pat1, pat2);
+		def changed = PatientUtils.updateNames(pat1, pat2);
 		assertTrue(changed);
 		def names = pat1.getNames();
 		assertEquals(names.size(), 2);
@@ -124,7 +124,7 @@ class PatientUpdaterTest {
 		pat1.addName(name1);
 		pat1.addName(name3);
 
-		def changed = PatientUpdater.updateNames(pat1, pat2);
+		def changed = PatientUtils.updateNames(pat1, pat2);
 		assertTrue(changed);
 		def names = pat1.getNames();
 		assertEquals(names.size(), 0);
@@ -135,7 +135,7 @@ class PatientUpdaterTest {
 		Patient pat1 = new Patient();
 		Patient pat2 = new Patient();
 
-		assertFalse( PatientUpdater.updateAddresses(pat1, pat2)); //no addresses
+		assertFalse( PatientUtils.updateAddresses(pat1, pat2)); //no addresses
 
 
 		PersonAddress addr1 = new PersonAddress( address1:"address1", address2:"address2", cityVillage:"cityVillage",
@@ -149,15 +149,15 @@ class PatientUpdaterTest {
 
 
 		pat1.addAddress(addr1);
-		assertTrue( PatientUpdater.updateAddresses(pat1, pat2));
+		assertTrue( PatientUtils.updateAddresses(pat1, pat2));
 		assertEquals(pat1.getAddresses().size(),0);
 
 		pat2.addAddress(addr1);
-		assertTrue( PatientUpdater.updateAddresses(pat1, pat2));
+		assertTrue( PatientUtils.updateAddresses(pat1, pat2));
 		assertEquals(pat1.getAddresses().size(),1);
 
 		pat2.addAddress(addr2);
-		assertTrue( PatientUpdater.updateAddresses(pat1, pat2));
+		assertTrue( PatientUtils.updateAddresses(pat1, pat2));
 		assertEquals(pat1.getAddresses().size(),2);
 
 
@@ -170,9 +170,9 @@ class PatientUpdaterTest {
 		PersonAttribute attr2 = new PersonAttribute(new PersonAttributeType(1), "third");
 		PersonAttribute attr3 = new PersonAttribute(new PersonAttributeType(2), "third");
 
-		assertTrue(PatientUpdater.compareContents.call(attr1, attr1));
-		assertFalse(PatientUpdater.compareContents.call(attr1, attr2));
-		assertFalse(PatientUpdater.compareContents.call(attr3, attr2));
+		assertTrue(PatientUtils.compareContents.call(attr1, attr1));
+		assertFalse(PatientUtils.compareContents.call(attr1, attr2));
+		assertFalse(PatientUtils.compareContents.call(attr3, attr2));
 	}
 
 	@Test
@@ -185,15 +185,15 @@ class PatientUpdaterTest {
 		Patient pat1 = new Patient();
 		Patient pat2 = new Patient();
 
-		assertFalse( PatientUpdater.updateAttributes(pat1, pat2)); //no addresses
+		assertFalse( PatientUtils.updateAttributes(pat1, pat2)); //no addresses
 		pat1.addAttribute(attr1);
-		assertTrue(PatientUpdater.updateAttributes(pat1, pat2));
+		assertTrue(PatientUtils.updateAttributes(pat1, pat2));
 		assertEquals(pat1.getAttributes().size(),0);
 		pat2.addAttribute(attr1);
-		assertTrue(PatientUpdater.updateAttributes(pat1, pat2));
+		assertTrue(PatientUtils.updateAttributes(pat1, pat2));
 		assertEquals(pat1.getAttributes().size(),1);
 		pat2.addAttribute(attr3);
-		assertTrue(PatientUpdater.updateAttributes(pat1, pat2));
+		assertTrue(PatientUtils.updateAttributes(pat1, pat2));
 		assertEquals(pat1.getAttributes().size(),2);
 
 
@@ -211,17 +211,17 @@ class PatientUpdaterTest {
 		Patient pat1 = new Patient();
 		Patient pat2 = new Patient();
 
-		assertFalse( PatientUpdater.updateIdentifiers(pat1, pat2)); //no ids
+		assertFalse( PatientUtils.updateIdentifiers(pat1, pat2)); //no ids
 		pat1.addIdentifier(id1);
-		assertTrue( PatientUpdater.updateIdentifiers(pat1, pat2)); //no ids
+		assertTrue( PatientUtils.updateIdentifiers(pat1, pat2)); //no ids
 		assertEquals(pat1.getIdentifiers().size(),0);
 
 		pat2.addIdentifier(id1);
-		assertTrue( PatientUpdater.updateIdentifiers(pat1, pat2)); //no ids
+		assertTrue( PatientUtils.updateIdentifiers(pat1, pat2)); //no ids
 		assertEquals(pat1.getIdentifiers().size(),1);
 
 		pat2.addIdentifier(id2);
-		assertTrue( PatientUpdater.updateIdentifiers(pat1, pat2)); //no ids
+		assertTrue( PatientUtils.updateIdentifiers(pat1, pat2)); //no ids
 		assertEquals(pat1.getIdentifiers().size(),2);
 
 	}
@@ -235,25 +235,25 @@ class PatientUpdaterTest {
 
 		//exact match
 		Relationship rel1 = new Relationship(caretaker1, patient, new RelationshipType(1));
-		assertFalse( PatientUpdater.isNewRelationship(rel1, [rel1]));
+		assertFalse( PatientUtils.isNewRelationship(rel1, [rel1]));
 
 		//exact match, one saved one not
 		Relationship rel4 = new Relationship(caretaker1, patient, new RelationshipType(1));
 		rel4.id = 1234;
-		assertFalse( PatientUpdater.isNewRelationship(rel1, [rel4]));
+		assertFalse( PatientUtils.isNewRelationship(rel1, [rel4]));
 
 		//same name new relationship
 		Person caretaker2 = new Person();
 		caretaker2.addName( new PersonName("last","middle","mom"));
 		Relationship rel2 = new Relationship(caretaker1, patient, new RelationshipType(2));
-		assertTrue( PatientUpdater.isNewRelationship(rel1, [rel2]));
+		assertTrue( PatientUtils.isNewRelationship(rel1, [rel2]));
 
 
 		//new name same relationship
 		Person caretaker3 = new Person();
 		caretaker3.addName( new PersonName("last","middle","new mom"));
 		Relationship rel3 = new Relationship(caretaker3, patient, new RelationshipType(1));
-		assertTrue( PatientUpdater.isNewRelationship(rel1, [rel3]));
+		assertTrue( PatientUtils.isNewRelationship(rel1, [rel3]));
 
 
 	}

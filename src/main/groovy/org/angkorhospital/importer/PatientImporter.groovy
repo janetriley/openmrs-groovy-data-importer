@@ -82,7 +82,7 @@ class PatientImporter  {
 
 					//there should be only one
 					existingPatient = Context.getPatientService().getPatient(existingIds.first().getPatient().getId());
-					def dataChanged = PatientUpdater.updateAll(existingPatient, newPatient);
+					def dataChanged = PatientUtils.updateAll(existingPatient, newPatient);
 					if(dataChanged ){   //save the update
 						log.debug("Made changes to existing patient (line " + source.currentLineNum +
 								"): "  + existingPatient.getPatientIdentifier()  + "/" + existingPatient.toString());
@@ -114,7 +114,7 @@ class PatientImporter  {
 					if( existingPatient != null ){
 						//check to see if we're duplicating
 						List<Relationship> existingRelationships = 	Context.getPersonService().getRelationships( null, savedPatient, relationship.getRelationshipType());
-						if( ! PatientUpdater.isNewRelationship(relationship, existingRelationships))
+						if( ! PatientUtils.isNewRelationship(relationship, existingRelationships))
 							continue; //relationship already defined, do not reimport
 
 					}

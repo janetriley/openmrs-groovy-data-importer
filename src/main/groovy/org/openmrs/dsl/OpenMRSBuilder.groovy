@@ -350,7 +350,8 @@ public class PatientFactory extends AbstractFactory {
 	attributes["me"] instanceof org.openmrs.Patient ){
 	    patient = attributes["me"];
 	    attributes.remove("me");
-	} else if( attributes != null){
+	} else if( attributes != null &&
+	attributes.size() != 0){
 	    if( attributes.gender == null )
 		attributes.gender="U"; //there must be a gender, set U for Unknown
 	    patient = new Patient(attributes); //encounterDatetime
@@ -437,6 +438,19 @@ public class PersonNameFactory extends AbstractFactory {
     public Object newInstance(FactoryBuilderSupport builder,
     Object name, Object value, Map attributes
     ) throws InstantiationException, IllegalAccessException {
+
+	//update existing
+	if( attributes.containsKey("me") &&
+	attributes["me"] instanceof org.openmrs.PersonName ){
+	    def existingName = attributes["me"];
+	    //update the existing object
+	    attributes.remove("me");
+	    attributes.each(){ key, val->
+		existingName[key] = val;
+	    }
+	    return existingName;
+	}
+
 	//PersonName expects fields givenName, middleName, familyName, preferred
 	return new PersonName(attributes);
     }
@@ -472,6 +486,18 @@ public class PersonAddressFactory extends AbstractFactory {
     Object name, Object value, Map attributes
     ) throws InstantiationException, IllegalAccessException {
 
+	//update existing
+	if( attributes.containsKey("me") &&
+	attributes["me"] instanceof org.openmrs.PersonAddress ){
+	    def address = attributes["me"];
+	    //update the existing object
+	    attributes.remove("me");
+	    attributes.each(){ key, val->
+		address[key] = val;
+	    }
+	    return address;
+	}
+
 	return new PersonAddress(attributes);
     }
 
@@ -503,14 +529,14 @@ public class PersonAttributeFactory extends AbstractFactory {
     }
 
     /**
-    * Returns an instance of org.openmrs.PersonAttribute constructed with the
-    * name/value pairs in the attributes map.
-    *
-    * @param attributeType - if an Integer, will instantiate a personAttributeType object with that id
-    * @return null if value is empty, else an instance of org.openmrs.PersonAttribute
-    * @see org.openmrs.PersonAttribute
-    * @see http://groovy.codehaus.org/Groovy+Beans for how to use name/value pairs in constructors.
-    */
+     * Returns an instance of org.openmrs.PersonAttribute constructed with the
+     * name/value pairs in the attributes map.
+     *
+     * @param attributeType - if an Integer, will instantiate a personAttributeType object with that id
+     * @return null if value is empty, else an instance of org.openmrs.PersonAttribute
+     * @see org.openmrs.PersonAttribute
+     * @see http://groovy.codehaus.org/Groovy+Beans for how to use name/value pairs in constructors.
+     */
     public Object newInstance(FactoryBuilderSupport builder,
     Object name, Object value, Map attributes
     ) throws InstantiationException, IllegalAccessException {
@@ -527,7 +553,7 @@ public class PersonAttributeFactory extends AbstractFactory {
 
     public void setParent(FactoryBuilderSupport builder,
     Object parent, Object personAttribute) {
-	    if(parent != null &&
+	if(parent != null &&
 	parent.metaClass.respondsTo(parent, "addAttribute", org.openmrs.PersonAttribute)){
 	    /* addAttribute adds if the person doesn't already have the attribute */
 	    parent.addAttribute(personAttribute);
@@ -545,16 +571,16 @@ public class RelationshipFactory extends AbstractFactory {
     }
 
     /**
-    * Returns an instance of org.openmrs. constructed with the
-    * name/value pairs in the attributes map.
-    * @param personA - personA in the relationship - an instance of org.openmrs.Person or Integer. If an Integer, will create a Person object with that id. The Person with that id
-    *    must already exist in the database. An id isn't sufficient to create a valid Person.
-    * @param personB - personB in the relationship - an instance of org.openmrs.Person or Integer. If an Integer, will create a Person object with that id. The Person with that id
-    *    must already exist in the database. An id isn't sufficient to create a valid Person.
-    * @return an instance of org.openmrs.Relationship, with PersonA and PersonB assigned.
-    * @see org.openmrs.Relationship
-    * @see http://groovy.codehaus.org/Groovy+Beans for how to use name/value pairs in constructors.
-    */
+     * Returns an instance of org.openmrs. constructed with the
+     * name/value pairs in the attributes map.
+     * @param personA - personA in the relationship - an instance of org.openmrs.Person or Integer. If an Integer, will create a Person object with that id. The Person with that id
+     *    must already exist in the database. An id isn't sufficient to create a valid Person.
+     * @param personB - personB in the relationship - an instance of org.openmrs.Person or Integer. If an Integer, will create a Person object with that id. The Person with that id
+     *    must already exist in the database. An id isn't sufficient to create a valid Person.
+     * @return an instance of org.openmrs.Relationship, with PersonA and PersonB assigned.
+     * @see org.openmrs.Relationship
+     * @see http://groovy.codehaus.org/Groovy+Beans for how to use name/value pairs in constructors.
+     */
 
     public Object newInstance(FactoryBuilderSupport builder,
     Object name, Object value, Map attributes

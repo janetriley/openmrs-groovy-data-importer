@@ -18,7 +18,7 @@ import org.apache.commons.lang.StringUtils;
  *
  *
  */
-class PatientUpdater {
+class PatientUtils {
 
 	//TO DO: compare relationships
 

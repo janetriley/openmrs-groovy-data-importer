@@ -1,9 +1,11 @@
+
 package org.angkorhospital.importer.assembler
 import org.angkorhospital.importer.source.AHCPatientSource;
 import org.openmrs.groovyimporter.assembler.BasePatientAssembler;
 import org.openmrs.groovyimporter.source.ImportSource;
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.dsl.*;
+import org.openmrs.Person;
 
 
 class PatientAssembler  implements org.openmrs.groovyimporter.assembler.BasePatientAssembler {
@@ -11,14 +13,23 @@ class PatientAssembler  implements org.openmrs.groovyimporter.assembler.BasePati
     AHCPatientSource source;
     FactoryBuilderSupport builder = new OpenMRSFactoryBuilder();
 
-    public AHCMainPatientAssembler(){
+    public PatientAssembler(){
     }
+
     void setSource(ImportSource newSource){
 	source = newSource;
     };
 
-
-
+    //defined in  OpenMRS Adminsitration > Person Attribute Management
+    static def personAttributeTypeIds = [
+	"legacyTable":8,//string Legacy
+	"CaretakerName_k":4,//boolean //Caretaker Name
+	"Telephone":10, //string
+	"Distance_Disp":11,//string Distance Id
+	"Age":12, //int Legacy Age
+	"NewRec":13,//Legacy newRec int
+	"RelationShipType":14//Caretaker Relatiopnship - string
+    ];
 
 
     /**
@@ -66,42 +77,19 @@ class PatientAssembler  implements org.openmrs.groovyimporter.assembler.BasePati
 			    );
 
 
-			personAttributeTypeIds.each(){ name, value ->
-			    personAttribute("attributeType":value,
+		    this.personAttributeTypeIds.each(){ name, value ->
+			personAttribute("attributeType":value,
 				"value":source.get(name));
-			}
-
-
-
+		    }
 
 		};
 	return patient;
     }
-    //defined in  OpenMRS Adminsitration > Person Attribute Management
-    static def personAttributeTypeIds = [
-	"legacyTable":8,//string Legacy
-	"CaretakerName_k":9,//boolean //Caretaker Name
-	"Telephone":10, //string
-	"Distance_Disp":11,//string Distance Id
-	"Age":12, //int Legacy Age
-	"NewRec":13,//Legacy newRec int
-	"RelationShipType":14//Caretaker Relatiopnship - string
-    ];
 
-    org.openmrs.Relationship buildRelationship( int patientId){
-	//check for empty caretaker
-	def relationshipTypeAttrs = source.getRelationshipType();
-	if( relationshipTypeAttrs == null )
-	    return null; //no caretaker set for this patient
-	def relationship = builder.relationship( relationshipTypeAttrs +  [patientId:patientId]){
-	    person(source.getCaretakerGender()){
-		personName(source.getCaretakerName()); //the caretaker
-	    }
-	};
-	return relationship;
+
+    org.openmrs.Relationship buildRelationship( Person a, Person b){
+	return null;
     }
-
-
 
 
 }
