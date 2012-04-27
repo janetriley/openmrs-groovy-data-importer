@@ -17,13 +17,8 @@ import org.openmrs.dsl.OpenMRSFactoryBuilder;
 import org.openmrs.groovyimporter.assembler.*;
 import org.openmrs.groovyimporter.source.*;
 
-abstract class BasePatientImporter  {
+abstract class BasePatientImporter extends BaseImporter {
 
-    static org.apache.commons.logging.Log log = LogFactory
-    .getLog("org.openmrs");
-    static org.apache.commons.logging.Log reimport = LogFactory.getLog("reimport");
-
-    ImportSource source = null;
     BasePatientAssembler assembler = null;
 
     public BasePatientImporter(){
@@ -35,17 +30,9 @@ abstract class BasePatientImporter  {
 	initComponents(filepath);
     }
 
-    abstract void initComponents(String filepath);
+    //  children to implement this:
+    // abstract void initComponents(String filepath);
 
-    /*
-     * clear the cache periodically to prevent slowdowns
-     *
-     */
-    def clearHibernateCache(){
-	Context.flushSession();
-	Context.clearSession();
-	log.debug("Cleared hibernate cache.");
-    }
 
     void importPatients(String filepath){
 	//global property log.level.openmrs
@@ -56,7 +43,6 @@ abstract class BasePatientImporter  {
 	def importCounter = 0;
 	def numSaved = 0;
 	println("Starting to import ${filepath} at: " + new Date() + " at line "  + source.getCurrentLineNum());
-
 
 	while(source.next() != null ){
 	    //read in each line to be processed
@@ -77,23 +63,17 @@ abstract class BasePatientImporter  {
 	    Patient savedPatient = null; //on successful save
 	    try {
 
-		if( newPatient.id > 0 ){
-		    savedPatient = newPatient; //no work to do, this import doesn't change patients
-		} else{
-		    //patient not found - save a stub
-		    savedPatient = Context.getPatientService().savePatient(newPatient);
-		    log.info("Created a new patient at line " + source.currentLineNum +
-			    ", id "  + savedPatient?.getPatientIdentifier());
-		}
+		savedPatient = Context.getPatientService().savePatient(newPatient);
+
 		if( savedPatient == null ){
 		    logRedo("Failed to save patient " + newPatient?.getPatientIdentifier(), source);
 		    continue; //can't save visits and encounters without a patient
 		}
 
 		else { //success
-		    //;
-		    //   System.out.println("Success   (line  " + source.getCurrentLineNum() +
-		    //	    "): " + savedVisit.toString() + ": patient " + savedPatient.toString() + "/" +  savedPatient.getPatientIdentifier());
+
+		    log.info("Updated patient at line " + source.currentLineNum +
+			", id "  + savedPatient?.getPatientIdentifier());
 		}
 	    }catch( Exception e){  //catch all other exceptions from first save attempt
 		log.error( "Got an error trying to save "  + savedPatient?.getPatientIdentifier()  + "/" +   savedPatient +
@@ -105,7 +85,8 @@ abstract class BasePatientImporter  {
 	}//end while
 
 	println("Ending at: " + new Date() + " at line "  + source.getCurrentLineNum());
-	println("Final cache size was " + assembler.conceptCache.size());
+
+	//println("Final cache size was " + assembler.conceptCache.size());
     }
 
 

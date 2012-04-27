@@ -553,7 +553,7 @@ public class PersonAttributeFactory extends AbstractFactory {
 
     public void setParent(FactoryBuilderSupport builder,
     Object parent, Object personAttribute) {
-	if(parent != null &&
+	if(parent != null && personAttribute != null &&
 	parent.metaClass.respondsTo(parent, "addAttribute", org.openmrs.PersonAttribute)){
 	    /* addAttribute adds if the person doesn't already have the attribute */
 	    parent.addAttribute(personAttribute);

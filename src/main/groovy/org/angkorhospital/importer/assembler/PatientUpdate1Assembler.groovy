@@ -47,20 +47,19 @@ class PatientUpdate1Assembler  extends org.angkorhospital.importer.assembler.Pat
 	}
 
 
-	//remove the old address and names before adding updated ones
-	//protopatient.setAddresses(null);
-	//protopatient.setNames(null);
 
 	//Update three things:  english name, address, and caretaker attributes
 	def patient = builder.patient( me:protopatient){
 
 
 	    //Khmer name will be reimported separately
+	    //Caretakername_k will be reimported separately
 
+
+	    //English name is the !preferred one
 	    def existingEngName = protopatient.getNames().find(){ it.preferred == false};
 
-	    //English name is secondary
-	    personName(
+	   personName(
 		    me:existingEngName,
 		    "familyName":source.get("FamilyName_e"),
 		    "givenName":source.get("FirstName_e"),
@@ -68,7 +67,6 @@ class PatientUpdate1Assembler  extends org.angkorhospital.importer.assembler.Pat
 
 
 	    def existingAddr = protopatient.getAddresses().find(){ it.preferred == true && it.voided == false};
-
 	    personAddress(
 		    me:existingAddr,
 		    preferred:true, //there's only 1 - if there's a different value on a more recent import, it's preferred
@@ -81,16 +79,11 @@ class PatientUpdate1Assembler  extends org.angkorhospital.importer.assembler.Pat
 		    );
 
 
-	    //caretaker info is being handled as an attribute rather than a Person and Relationship
-	    [
-		"CaretakerName_k",
-		"RelationShipType"
-	    ].each(){ name ->
-		def value = source.get(name);
-		if( ! StringUtils.isEmpty(value)){
-		    personAttribute("attributeType":personAttributeTypeIds[name],
-			    "value":value);
-		}
+	    //caretaker info is being handled as attributes rather than a Person and Relationship
+	    def value = source.get("RelationShipType");
+	    if( ! StringUtils.isEmpty(value)){
+		personAttribute("attributeType":personAttributeTypeIds["RelationShipType"],
+			"value":value);
 	    }
 	}
 	return patient;

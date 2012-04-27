@@ -40,10 +40,32 @@ class AHCPatientSource extends CsvFileSource {
 	"Wife" :[ "gender":"F", "relationshipTypeId":21 ],
     ];
 
-	//for new-style identifiers, remove the dash from the  old one
+    //for new-style identifiers, remove the dash from the  old one
     def getSecondaryIdentifier(){
 	return StringUtils.replace(get("patientId"),"-","");
     }
+
+
+    /*
+     * "PatientCodeNo",
+     * "FamilyName_e",
+     * "FirstName_e",
+     * "Gender",
+     * Address",
+     * "Distance_Disp",
+
+     * "RelationShipType","
+     * "Pv_Province_e","Di_District_e",
+     * "Cn_Commune_e","Vi_Village_e",
+     * "Telephone","Age","NewRec",
+     * "DateOfBirth",
+     * "CreationDate"
+     *
+     *
+     * "
+
+     */
+
 
     def get(String key){
 	switch(key){
@@ -82,6 +104,7 @@ class AHCPatientSource extends CsvFileSource {
 		break;
 
 	    case [
+		"RelationShipType",
 		"Address",
 		"Vi_Village_e",
 		"Cn_Commune_e",

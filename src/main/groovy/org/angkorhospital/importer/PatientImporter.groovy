@@ -19,12 +19,27 @@ import org.apache.commons.cli.*;
 import org.openmrs.tools.importer.factory.*;
 import org.openmrs.tools.importer.assembler.*;
 import org.openmrs.tools.importer.source.*;
+//TODO: refactor to extend basePatientImporter, use Launcher
 class PatientImporter  {
 
 	static org.apache.commons.logging.Log log = LogFactory
 	.getLog("org.openmrs");
 	static org.apache.commons.logging.Log reimport = LogFactory.getLog("reimport");
 
+	/*
+	* clear the cache periodically to prevent slowdowns
+	*
+	*/
+       def clearHibernateCache(){
+	       Context.flushSession();
+	       Context.clearSession();
+	       log.debug("Cleared hibernate cache.");
+       }
+
+       def logRedo(msg, source){
+	   reimport.error(msg);
+	   reimport.error(source.writeAsCsv());
+       }
 
 	def initSource(String filepath){
 		def source = new AHCPatientSource(filepath);
@@ -32,15 +47,7 @@ class PatientImporter  {
 		return source;
 	}
 
-	/*
-	 * clear the cache periodically to prevent slowdowns
-	 *
-	 */
-	def clearHibernateCache(){
-		Context.flushSession();
-		Context.clearSession();
-		log.debug("Cleared hibernate cache.");
-	}
+
 
 	void importPatients(String filepath){
 
@@ -227,10 +234,7 @@ class PatientImporter  {
 		System.out.println("Finished importing.");
 	}
 
-	def logRedo(msg, source){
-		reimport.error(msg);
-		reimport.error(source.writeAsCsv());
-	}
+
 
 
 }

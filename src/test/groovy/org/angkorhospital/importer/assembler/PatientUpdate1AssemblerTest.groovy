@@ -176,7 +176,6 @@ class PatientUpdate1AssemblerTest  extends BaseContextSensitiveTest {
 
 	//caretaker info is being handled as an attribute rather than a Person and Relationship
 	[
-	    "CaretakerName_k",
 	    "RelationShipType"
 	].each(){ name ->
 

@@ -13,13 +13,13 @@ import org.apache.commons.cli.*;
 import org.openmrs.dsl.*;
 
 
-class Launcher  {
+class PatientLauncher  {
 
     static org.apache.commons.logging.Log log = LogFactory
     .getLog("org.openmrs");
     static org.apache.commons.logging.Log reimport = LogFactory.getLog("reimport");
 
-    static BaseEncounterImporter importer = null;
+    static BasePatientImporter importer = null;
 
     public static void main(String[]args) {
 
@@ -105,7 +105,7 @@ class Launcher  {
 
 	    log.info("Starting data import at " + new Date());
 
-	    importer.importEncounters(importFile);
+	    importer.importPatients(importFile);
 
 	} catch (java.io.FileNotFoundException e) {
 	    log.error("Couldn't find file, can't import anything."

@@ -8,15 +8,15 @@ import org.openmrs.dsl.OpenMRSFactoryBuilder;
 import org.openmrs.groovyimporter.BasePatientImporter;
 
 
-class PatientNameUpdater extends BasePatientImporter  {
+class PatientUpdate1 extends BasePatientImporter  {
 
-    public PatientNameUpdater(){
+    public PatientUpdate1(){
 	super();
     }
 
-    public PatientNameUpdater(String filepath){
-	this();
-	initComponents(filepath);
+    public PatientUpdate1(String filepath){
+	super(filepath);
+//	initComponents(filepath);
     }
 
    void initComponents(String filepath){

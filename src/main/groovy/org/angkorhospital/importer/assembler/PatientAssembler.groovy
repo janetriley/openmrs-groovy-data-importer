@@ -56,11 +56,12 @@ class PatientAssembler  implements org.openmrs.groovyimporter.assembler.BasePati
 		    patientIdentifier([ "identifier":source.getSecondaryIdentifier(),
 				"location":2, "preferred":false, "identifierType":3 ]);
 
-		    //Khmer name is preferred
+		/*    //Khmer name is preferred
+			    //import separately - need to convert to KH characters
 		    personName("givenName":source.get("FirstName_k"),
 			    "familyName":source.get("FamilyName_k"),
 			    "preferred":true);
-
+			    */
 		    //English name is secondary
 		    personName("givenName":source.get("FirstName_e"),
 			    "familyName":source.get("FamilyName_e"),
@@ -78,8 +79,10 @@ class PatientAssembler  implements org.openmrs.groovyimporter.assembler.BasePati
 
 
 		    this.personAttributeTypeIds.each(){ name, value ->
+			if( ! StringUtils.isEmpty(source.get(name))){
 			personAttribute("attributeType":value,
 				"value":source.get(name));
+			}
 		    }
 
 		};
