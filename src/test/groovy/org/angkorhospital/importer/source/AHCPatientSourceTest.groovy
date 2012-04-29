@@ -60,12 +60,11 @@ class AHCPatientSourceTest extends BaseSourceTest {
 
     @Test
     public void canReadIdentifier(){
-	assertEquals(1, mySource.currentLineNum); //constructor consumes header line
-	def line =  mySource.next();
 	assertNotNull(mySource.readValue("PatientCodeNo"));
 
     }
 
+    @Ignore
     @Test
     public void getPrimaryIdentifier(){
 	def primaryId= mySource.getPrimaryIdentifier();

@@ -440,15 +440,15 @@ public class PersonNameFactory extends AbstractFactory {
     ) throws InstantiationException, IllegalAccessException {
 
 	//update existing
-	if( attributes.containsKey("me") &&
-	attributes["me"] instanceof org.openmrs.PersonName ){
+	if( attributes.containsKey("me")) {
 	    def existingName = attributes["me"];
 	    //update the existing object
 	    attributes.remove("me");
-	    attributes.each(){ key, val->
-		existingName[key] = val;
+
+	    if( existingName instanceof org.openmrs.PersonName ){
+		attributes.each(){ key, val-> existingName[key] = val; }
+		return existingName;
 	    }
-	    return existingName;
 	}
 
 	//PersonName expects fields givenName, middleName, familyName, preferred
@@ -487,17 +487,16 @@ public class PersonAddressFactory extends AbstractFactory {
     ) throws InstantiationException, IllegalAccessException {
 
 	//update existing
-	if( attributes.containsKey("me") &&
-	attributes["me"] instanceof org.openmrs.PersonAddress ){
+	if( attributes.containsKey("me")){
 	    def address = attributes["me"];
-	    //update the existing object
 	    attributes.remove("me");
-	    attributes.each(){ key, val->
-		address[key] = val;
+	    //screen out nulls
+	    if( address instanceof org.openmrs.PersonAddress ){
+		//update the existing object
+		attributes.each(){ key, val-> address[key] = val;}
+		return address;
 	    }
-	    return address;
 	}
-
 	return new PersonAddress(attributes);
     }
 

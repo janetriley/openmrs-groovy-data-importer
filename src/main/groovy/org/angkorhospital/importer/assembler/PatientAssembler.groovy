@@ -10,7 +10,7 @@ import org.openmrs.Person;
 
 class PatientAssembler  implements org.openmrs.groovyimporter.assembler.BasePatientAssembler {
 
-    AHCPatientSource source;
+    ImportSource source;
     FactoryBuilderSupport builder = new OpenMRSFactoryBuilder();
 
     public PatientAssembler(){

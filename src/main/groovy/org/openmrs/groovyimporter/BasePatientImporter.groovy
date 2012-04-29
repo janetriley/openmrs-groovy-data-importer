@@ -58,13 +58,16 @@ abstract class BasePatientImporter extends BaseImporter {
 		continue;
 
 	    Patient newPatient = assembler.buildPatient();
-
+	    if( newPatient == null ){
+		log.error( "Couldn't assemble a patient for line " + source.currentLineNum +
+			" identifier " + source.get("patientId"));
+		logRedo("assembler failed to create patient", source);
+		continue;
+	    }
 
 	    Patient savedPatient = null; //on successful save
 	    try {
-
 		savedPatient = Context.getPatientService().savePatient(newPatient);
-
 		if( savedPatient == null ){
 		    logRedo("Failed to save patient " + newPatient?.getPatientIdentifier(), source);
 		    continue; //can't save visits and encounters without a patient
@@ -73,7 +76,7 @@ abstract class BasePatientImporter extends BaseImporter {
 		else { //success
 
 		    log.info("Updated patient at line " + source.currentLineNum +
-			", id "  + savedPatient?.getPatientIdentifier());
+			    ", id "  + savedPatient?.getPatientIdentifier());
 		}
 	    }catch( Exception e){  //catch all other exceptions from first save attempt
 		log.error( "Got an error trying to save "  + savedPatient?.getPatientIdentifier()  + "/" +   savedPatient +

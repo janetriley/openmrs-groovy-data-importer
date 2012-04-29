@@ -57,17 +57,23 @@ class PatientUpdate1Assembler  extends org.angkorhospital.importer.assembler.Pat
 
 
 	    //English name is the !preferred one
-	    def existingEngName = protopatient.getNames().find(){ it.preferred == false};
 
-	   personName(
+	        def existingEngName = protopatient.getNames().find(){ it.preferred == false};
+		if(existingEngName != null ){
+		personName(
 		    me:existingEngName,
+		    "familyName":source.get("FamilyName_e"),
+		    "givenName":source.get("FirstName_e"),
+		    "preferred":false);
+		}
+		else  personName(
 		    "familyName":source.get("FamilyName_e"),
 		    "givenName":source.get("FirstName_e"),
 		    "preferred":false);
 
 
-	    def existingAddr = protopatient.getAddresses().find(){ it.preferred == true && it.voided == false};
-	    personAddress(
+	    def existingAddr = protopatient.getAddresses().find(){ it.preferred == true && it.voided == false};	    	    
+	    	    personAddress(
 		    me:existingAddr,
 		    preferred:true, //there's only 1 - if there's a different value on a more recent import, it's preferred
 		    "address1":source.get("Address"),
