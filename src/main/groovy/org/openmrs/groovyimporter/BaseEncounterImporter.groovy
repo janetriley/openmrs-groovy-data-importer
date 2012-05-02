@@ -17,13 +17,8 @@ import org.openmrs.dsl.OpenMRSFactoryBuilder;
 import org.openmrs.groovyimporter.assembler.*;
 import org.openmrs.groovyimporter.source.*;
 
-abstract class BaseEncounterImporter  {
+abstract class BaseEncounterImporter extends BaseImporter {
 
-    static org.apache.commons.logging.Log log = LogFactory
-    .getLog("org.openmrs");
-    static org.apache.commons.logging.Log reimport = LogFactory.getLog("reimport");
-
-    ImportSource source = null;
     BaseEncounterAssembler assembler = null;
 
     public BaseEncounterImporter(){
@@ -35,19 +30,13 @@ abstract class BaseEncounterImporter  {
 	initComponents(filepath);
     }
 
-        abstract void initComponents(String filepath);
-
-    /*
-     * clear the cache periodically to prevent slowdowns
-     *
-     */
-    def clearHibernateCache(){
-	Context.flushSession();
-	Context.clearSession();
-	log.debug("Cleared hibernate cache.");
-    }
+    abstract void initComponents( filepath);
 
     void importEncounters(String filepath){
+	importRecords(filepath);
+    }
+
+    void importRecords( filepath){
 	//global property log.level.openmrs
 	//OpenmrsUtil.applyLogLevels("error");
 
@@ -69,7 +58,7 @@ abstract class BaseEncounterImporter  {
 	    }
 
 	    if( source.currentLine == null )
-	    continue;
+		continue;
 
 
 	    def  v = assembler.buildVisit();
@@ -94,11 +83,11 @@ abstract class BaseEncounterImporter  {
 		    //patient not found - save a stub
 		    savedPatient = Context.getPatientService().savePatient(newPatient);
 		    log.info("Created a new patient at line " + source.currentLineNum +
-		    ", id "  + savedPatient?.getPatientIdentifier());
+			    ", id "  + savedPatient?.getPatientIdentifier());
 		}
 		if( savedPatient == null ){
 		    logRedo("Failed to save patient " + newPatient?.getPatientIdentifier(), source);
-		continue; //can't save visits and encounters without a patient
+		    continue; //can't save visits and encounters without a patient
 		}
 
 		def savedVisit = null;
@@ -110,54 +99,48 @@ abstract class BaseEncounterImporter  {
 			def e  = (Context.getEncounterService().saveEncounter(enc));
 			//assertTrue(enc.id > 0);
 			if( e == null || enc.id == 0 )
-			encounterError = true;
+			    encounterError = true;
 			else
-			numSaved++;
+			    numSaved++;
 		    }
 		} else if ( v instanceof org.openmrs.Encounter){
 
 		    def e  = (Context.getEncounterService().saveEncounter(v));
 		    //assertTrue(enc.id > 0);
 		    if( e == null || v.id == 0 )
-		    encounterError = true;
+			encounterError = true;
 		    else{
-		    numSaved++;
-		    savedVisit = Boolean.TRUE;
+			numSaved++;
+			savedVisit = Boolean.TRUE;
 		    }
 		}
 
 
-	    if( savedVisit  == null ){
-		logRedo("Failed to save visit for " + newPatient?.getPatientIdentifier(), source);
-	    }
+		if( savedVisit  == null ){
+		    logRedo("Failed to save visit for " + newPatient?.getPatientIdentifier(), source);
+		}
 
-	    else if( encounterError  == null ){
-		logRedo("Failed to save encounter for " + newPatient?.getPatientIdentifier(), source);
-	    }
-	    else { //success
-		//;
-		//   System.out.println("Success   (line  " + source.getCurrentLineNum() +
-		//	    "): " + savedVisit.toString() + ": patient " + savedPatient.toString() + "/" +  savedPatient.getPatientIdentifier());
-	    }
-	}catch( Exception e){  //catch all other exceptions from first save attempt
-	    log.error( "Got an error trying to save "  + savedPatient?.getPatientIdentifier()  + "/" +   savedPatient +
-	    ": line " + source.currentLineNum +
-	    ": " + e.getMessage());
-	    logRedo(e.getMessage(), source);
-	} //end create patient
+		else if( encounterError  == null ){
+		    logRedo("Failed to save encounter for " + newPatient?.getPatientIdentifier(), source);
+		}
+		else { //success
+		    //;
+		    //   System.out.println("Success   (line  " + source.getCurrentLineNum() +
+		    //	    "): " + savedVisit.toString() + ": patient " + savedPatient.toString() + "/" +  savedPatient.getPatientIdentifier());
+		}
+	    }catch( Exception e){  //catch all other exceptions from first save attempt
+		log.error( "Got an error trying to save "  + savedPatient?.getPatientIdentifier()  + "/" +   savedPatient +
+			": line " + source.currentLineNum +
+			": " + e.getMessage());
+		logRedo(e.getMessage(), source);
+	    } //end create patient
 
-    }//end while
+	}//end while
 
-    println("Ending at: " + new Date() + " at line "  + source.getCurrentLineNum());
-    println("Final cache size was " + OPDEncounterAssembler.conceptCache.size());
-}
+	println("Ending at: " + new Date() + " at line "  + source.getCurrentLineNum());
+	println("Final cache size was " + OPDEncounterAssembler.conceptCache.size());
+    }
 
-
-
-def logRedo(msg, source){
-    reimport.error(msg);
-    reimport.error(source.writeAsCsv());
-}
 
 
 }

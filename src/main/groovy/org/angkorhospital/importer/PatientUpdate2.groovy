@@ -22,8 +22,11 @@ class PatientUpdate2 extends BasePatientImporter  {
 //	initComponents(filepath);
     }
 
-   void initComponents(String filepath){
+   void initComponents( filepath){
 	source = new KhPatientSource(filepath);
 	assembler = new PatientUpdate2Assembler( source:source);
     }
+
+   public void importRecords(){ super.importRecords();}
+
 }

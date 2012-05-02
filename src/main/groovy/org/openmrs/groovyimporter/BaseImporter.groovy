@@ -24,13 +24,13 @@ import org.openmrs.groovyimporter.source.*;
  *
  */
 
-abstract class BaseImporter  {
+abstract class BaseImporter implements Importable {
 
     static org.apache.commons.logging.Log log = LogFactory
     .getLog("org.openmrs");
     static org.apache.commons.logging.Log reimport = LogFactory.getLog("reimport");
 
-    ImportSource source = null;
+    DataIterator source = null;
     //BaseAssembler
 
     public BaseImporter(){
@@ -42,10 +42,8 @@ abstract class BaseImporter  {
 	initComponents(filepath);
     }
 
-    abstract void initComponents(String filepath);
-    //TODO: refactor baseEnc and basePatient to have an import() method
-    //rather than importX
-
+    abstract public  void initComponents( resources );
+    abstract public void importRecords();
 
     /*
      * clear the cache periodically to prevent slowdowns

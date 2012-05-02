@@ -6,6 +6,7 @@ target/*
 *~
 *.tmp
 *.log
+*_log
 *errors
 ImportOne.groovy
 Classy.groovy

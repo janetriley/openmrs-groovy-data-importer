@@ -14,7 +14,7 @@ import org.apache.commons.lang.StringUtils;
  *
  */
 
-class CsvFileSource implements ImportSource{
+class CsvFileSource implements DataIterator{
     static Logger log = Logger.getLogger("openmrs.tools.importer");
 
     String filepath = null;

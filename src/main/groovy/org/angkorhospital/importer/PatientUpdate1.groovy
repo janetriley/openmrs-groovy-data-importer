@@ -16,11 +16,13 @@ class PatientUpdate1 extends BasePatientImporter  {
 
     public PatientUpdate1(String filepath){
 	super(filepath);
-//	initComponents(filepath);
     }
 
-   void initComponents(String filepath){
+   void initComponents( filepath){
 	source = new AHCPatientSource(filepath);
 	assembler = new PatientUpdate1Assembler( source:source);
     }
+
+   public void importRecords(){ super.importRecords();}
+
 }

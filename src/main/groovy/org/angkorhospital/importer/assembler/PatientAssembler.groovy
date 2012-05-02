@@ -2,7 +2,7 @@
 package org.angkorhospital.importer.assembler
 import org.angkorhospital.importer.source.AHCPatientSource;
 import org.openmrs.groovyimporter.assembler.BasePatientAssembler;
-import org.openmrs.groovyimporter.source.ImportSource;
+import org.openmrs.groovyimporter.source.DataIterator;
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.dsl.*;
 import org.openmrs.Person;
@@ -10,13 +10,13 @@ import org.openmrs.Person;
 
 class PatientAssembler  implements org.openmrs.groovyimporter.assembler.BasePatientAssembler {
 
-    ImportSource source;
+    DataIterator source;
     FactoryBuilderSupport builder = new OpenMRSFactoryBuilder();
 
     public PatientAssembler(){
     }
 
-    void setSource(ImportSource newSource){
+    void setSource(DataIterator newSource){
 	source = newSource;
     };
 

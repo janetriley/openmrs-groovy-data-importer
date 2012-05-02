@@ -15,8 +15,12 @@ class LabCrossmatchImporter extends BaseEncounterImporter  {
     }
 
 
-       void initComponents(String filepath){
+   public void initComponents( filepath){
 	source = new LabCrossmatchEncounterSource(filepath);
 	assembler = new LabCrossmatchAssembler( source:source);
+    }
+
+    public void importRecords(){
+	super.importRecords();
     }
 }

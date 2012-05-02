@@ -22,7 +22,7 @@ abstract class BaseEncounterAssembler {
     static org.openmrs.VisitAttributeType  dischargeAtId = null;
     static org.openmrs.VisitAttributeType  primaryDxId = null;
 
-    org.openmrs.groovyimporter.source.ImportSource source;
+    org.openmrs.groovyimporter.source.DataIterator source;
     org.openmrs.dsl.OpenMRSFactoryBuilder builder = new org.openmrs.dsl.OpenMRSFactoryBuilder();
     static def conceptCache = [:];
 
@@ -68,7 +68,7 @@ abstract class BaseEncounterAssembler {
 	return c;
     };
 
-    void setSource(org.openmrs.groovyimporter.source.ImportSource newSource){
+    void setSource(org.openmrs.groovyimporter.source.DataIterator newSource){
 	source = newSource;
     };
 

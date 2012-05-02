@@ -105,7 +105,7 @@ class Launcher  {
 
 	    log.info("Starting data import at " + new Date());
 
-	    importer.importEncounters(importFile);
+	    importer.importRecords(importFile);
 
 	} catch (java.io.FileNotFoundException e) {
 	    log.error("Couldn't find file, can't import anything."

@@ -22,7 +22,7 @@ import org.openmrs.groovyimporter.assembler.*;
 import org.openmrs.groovyimporter.source.*;
 class OPDImporter extends BaseEncounterImporter {
 
-    void initComponents(String filepath){
+    public void initComponents( filepath){
 //	importer = new OPDImporter();
 	source = new OPDEncounterSource(filepath);
 	assembler = new OPDEncounterAssembler( source:source);
@@ -36,5 +36,7 @@ class OPDImporter extends BaseEncounterImporter {
 	this();
 	initComponents(filepath);
     }
+
+    public void importRecords(){ super.importRecords();}
 
 }

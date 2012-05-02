@@ -33,11 +33,11 @@ abstract class BasePatientImporter extends BaseImporter {
     //  children to implement this:
     // abstract void initComponents(String filepath);
 
-
     void importPatients(String filepath){
-	//global property log.level.openmrs
-	//OpenmrsUtil.applyLogLevels("error");
+	importRecords(filepath);
+    }
 
+    public void importRecords( filepath){
 	//set source and assembler,
 	initComponents(filepath);
 	def importCounter = 0;
@@ -90,12 +90,6 @@ abstract class BasePatientImporter extends BaseImporter {
 	println("Ending at: " + new Date() + " at line "  + source.getCurrentLineNum());
 
 	//println("Final cache size was " + assembler.conceptCache.size());
-    }
-
-
-    def logRedo(msg, source){
-	reimport.error(msg);
-	reimport.error(source.writeAsCsv());
     }
 
 
